@@ -17,10 +17,11 @@ function Dashboard() {
     try {
       setLoading(true);
 
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
       const [userRes, stocksRes, holdingsRes] = await Promise.all([
-        axios.get(`http://localhost:8080/api/user/${userId}`),
-        axios.get("http://localhost:8080/api/stocks"),
-        axios.get(`http://localhost:8080/api/holdings/${userId}`),
+        axios.get(`${API_BASE}/user/${userId}`),
+        axios.get(`${API_BASE}/stocks`),
+        axios.get(`${API_BASE}/holdings/${userId}`),
       ]);
 
       setUser(userRes.data || null);

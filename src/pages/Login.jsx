@@ -11,7 +11,8 @@ function Login() {
 
   const login = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/api/login", {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+      const response = await axios.post(`${API_BASE}/login`, {
         username,
         password,
       });

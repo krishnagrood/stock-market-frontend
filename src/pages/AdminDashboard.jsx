@@ -548,15 +548,85 @@ function AdminDashboard() {
       <div style={styles.bgGlowTwo} />
       <div style={styles.bgGlowThree} />
 
-      <header style={styles.header}>
+      <header className="admin-header" style={styles.header}>
         <div style={styles.headerInner}>
           <span style={styles.headerLabel}>Enterprise Access</span>
-          <h1 style={styles.headerTitle}>MARKET ODYSSEY</h1>
+          <h1 className="header-title-text" style={styles.headerTitle}>MARKET ODYSSEY</h1>
           <div style={styles.headerLine} />
         </div>
       </header>
 
-      <main style={styles.main}>
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .admin-main-grid {
+              grid-template-columns: 1fr !important;
+            }
+            .top-bar-layout {
+              flex-direction: column !important;
+              align-items: flex-start !important;
+              gap: 20px !important;
+              margin-bottom: 30px !important;
+            }
+            .top-stats-layout {
+              width: 100% !important;
+              flex-wrap: wrap !important;
+            }
+            .top-stats-layout > div {
+              flex: 1 !important;
+              min-width: 120px !important;
+            }
+            .header-title-text {
+              font-size: 2.5rem !important;
+            }
+            .admin-header {
+              padding-top: 40px !important;
+              padding-bottom: 40px !important;
+            }
+            .admin-main {
+              padding: 0 16px 60px !important;
+            }
+            .panel-layout {
+              padding: 20px !important;
+            }
+            .order-grid-layout {
+               grid-template-columns: 1fr !important;
+            }
+            .allocation-grid-layout {
+               grid-template-columns: 1fr !important;
+            }
+            .stocks-grid-layout {
+               grid-template-columns: 1fr !important;
+            }
+          }
+
+          @keyframes panelGlow {
+            0% { box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.56), 0 0 24px -6px rgba(78, 222, 163, 0.03); }
+            100% { box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.64), 0 0 32px -4px rgba(78, 222, 163, 0.06); }
+          }
+          @keyframes glowPulse {
+            0% { filter: drop-shadow(0 0 12px rgba(78, 222, 163, 0.1)); }
+            100% { filter: drop-shadow(0 0 24px rgba(78, 222, 163, 0.3)); }
+          }
+          @keyframes bgFloatOne {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -20px); }
+            100% { transform: translate(0, 0); }
+          }
+          @keyframes bgFloatTwo {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-30px, 15px); }
+            100% { transform: translate(0, 0); }
+          }
+          @keyframes shimmerSweep {
+            0% { background-position: 220% auto; }
+            100% { background-position: -220% auto; }
+          }
+        `}
+      </style>
+
+
+      <main className="admin-main" style={styles.main}>
         <div className="top-bar-layout" style={styles.topBar}>
           <div>
             <h2 style={styles.dashboardTitle}>Administrator Terminal</h2>
@@ -592,7 +662,7 @@ function AdminDashboard() {
 
         <div className="admin-main-grid" style={styles.mainGrid}>
           <div style={styles.leftCol}>
-            <section style={styles.panel}>
+            <section className="panel-layout" style={styles.panel}>
               <div style={styles.panelHead}>
                 <h3 style={styles.panelTitle}>Market Control</h3>
                 <span style={styles.miniBadge}>Operational</span>
@@ -611,7 +681,7 @@ function AdminDashboard() {
               </div>
             </section>
 
-            <section style={styles.panel}>
+            <section className="panel-layout" style={styles.panel}>
               <div style={styles.panelHead}>
                 <h3 style={styles.panelTitle}>Market Preview</h3>
               </div>
@@ -672,12 +742,12 @@ function AdminDashboard() {
           </div>
 
           <div style={styles.rightCol}>
-            <section style={styles.panel}>
+            <section className="panel-layout" style={styles.panel}>
               <h3 style={styles.sectionTitle}>User Registry</h3>
 
               <div style={{ marginBottom: "26px" }}>
                 <p style={styles.fieldLabel}>Create New Account</p>
-                <div style={styles.addStockGrid}>
+                <div className="add-stock-grid-layout" style={styles.addStockGrid}>
                   <div style={styles.fieldBlock}>
                     <input
                       style={styles.input}
@@ -751,10 +821,10 @@ function AdminDashboard() {
               </div>
             </section>
 
-            <section style={styles.panel}>
+            <section className="panel-layout" style={styles.panel}>
               <h3 style={styles.sectionTitle}>Add New Stock</h3>
 
-              <div className="add-stock-grid" style={styles.addStockGrid}>
+              <div className="add-stock-grid" className="add-stock-grid-layout" style={styles.addStockGrid}>
                 <div style={styles.fieldBlock}>
                   <label style={styles.fieldLabel}>Stock Name</label>
                   <input
@@ -788,10 +858,10 @@ function AdminDashboard() {
               </div>
             </section>
 
-            <section style={styles.panel}>
+            <section className="panel-layout" style={styles.panel}>
               <h3 style={styles.sectionTitle}>Allocate Stock To User</h3>
 
-              <div className="allocation-grid-layout" style={styles.allocationGrid}>
+              <div className="allocation-grid-layout" className="allocation-grid-layout" style={styles.allocationGrid}>
                 <div style={styles.fieldBlock}>
                   <label style={styles.fieldLabel}>Select User</label>
                   <select
@@ -866,7 +936,7 @@ function AdminDashboard() {
             <section style={{ ...styles.panel, overflow: "hidden" }}>
               <h3 style={styles.sectionTitleWithBorder}>Admin Order Terminal</h3>
 
-              <div className="order-grid-layout" style={styles.orderGrid}>
+              <div className="order-grid-layout" className="order-grid-layout" style={styles.orderGrid}>
 
 
                 <div style={styles.fieldBlock}>
@@ -1047,7 +1117,7 @@ function AdminDashboard() {
           <section style={{ ...styles.panel, gridColumn: "1 / -1" }}>
             <h3 style={styles.sectionTitle}>Stocks</h3>
 
-            <div className="stocks-grid-layout" style={styles.stocksGrid}>
+            <div className="stocks-grid-layout" className="stocks-grid-layout" style={styles.stocksGrid}>
               {stocks.map((s) => (
                 <div key={s.id} style={styles.stockCard}>
                   <div style={styles.stockCardTop}>

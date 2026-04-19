@@ -194,7 +194,7 @@ function Login() {
         />
       </div>
 
-      <header className="fixed top-0 left-0 z-50 flex items-center px-8 py-6">
+      <header className="fixed top-0 left-0 z-50 flex items-center px-4 py-4 md:px-8 md:py-6">
         <button
           type="button"
           onClick={handleLogoClick}
@@ -208,7 +208,7 @@ function Login() {
           <img
             src={logo}
             alt="MockStock Logo"
-            className="relative z-10 h-28 w-auto object-contain drop-shadow-[0_0_34px_rgba(34,197,94,0.88)]"
+            className="relative z-10 h-16 w-auto object-contain drop-shadow-[0_0_24px_rgba(34,197,94,0.88)] md:h-28"
             style={{
               animation: "logoFloat 6s ease-in-out infinite",
             }}
@@ -232,10 +232,10 @@ function Login() {
 
       <main className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
         <div className="mb-12 text-center">
-          <div className="mx-auto mb-4 h-24 w-80 rounded-full bg-green-500/10 blur-3xl" />
+          <div className="mx-auto mb-4 h-16 w-40 rounded-full bg-green-500/10 blur-2xl md:h-24 md:w-80 md:blur-3xl" />
 
           <h1
-            className="relative -mt-16 text-5xl font-black uppercase md:text-7xl"
+            className="relative -mt-10 text-3xl font-black uppercase sm:text-5xl md:-mt-16 md:text-7xl"
             style={{
               letterSpacing: "0.11em",
               backgroundImage:
@@ -250,7 +250,7 @@ function Login() {
             MARKET ODYSSEY
           </h1>
 
-          <p className="mt-3 text-[11px] uppercase tracking-[0.45em] text-green-400/90 md:text-xs">
+          <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-green-400/90 md:text-xs md:tracking-[0.45em]">
             INCEPTION 2026
           </p>
 

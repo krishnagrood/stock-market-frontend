@@ -107,6 +107,35 @@ function Dashboard() {
       <style>{`
         @keyframes mockStockGlimmer {
           0% {
+        @media (max-width: 768px) {
+          .user-main-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .user-hero-row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 20px !important;
+          }
+          .user-status-wrap {
+            width: 100% !important;
+          }
+          .user-status-card {
+            flex: 1 !important;
+            min-width: 120px !important;
+          }
+          .brand-main-text {
+            font-size: 3rem !important;
+          }
+          .stat-grid-layout {
+            grid-template-columns: 1fr 1fr !important;
+          }
+          .order-book-grid-layout {
+            grid-template-columns: 1fr !important;
+          }
+        }
+
+        @keyframes mockStockGlimmer {
+          0% {
             background-position: -220% center;
           }
           100% {
@@ -134,23 +163,23 @@ function Dashboard() {
       <div style={styles.container}>
         <div style={styles.topBrandBlock}>
           <p style={styles.brandTopText}>INVESTOR ACCESS</p>
-          <h1 style={styles.brandMain}>MARKET ODYSSEY</h1>
+          <h1 className="brand-main-text" style={styles.brandMain}>MARKET ODYSSEY</h1>
           <div style={styles.brandLine}></div>
         </div>
 
-        <div style={styles.heroRow}>
+        <div className="user-hero-row" style={styles.heroRow}>
           <div>
             <h2 style={styles.heroTitle}>USER PORTFOLIO TERMINAL</h2>
             <p style={styles.heroSubtitle}>PREMIUM INVESTOR INTERFACE</p>
           </div>
 
-          <div style={styles.statusWrap}>
-            <div style={styles.statusCard}>
+          <div className="user-status-wrap" style={styles.statusWrap}>
+            <div className="user-status-card" style={styles.statusCard}>
               <p style={styles.statusLabel}>ACCOUNT</p>
               <h3 style={styles.statusValue}>ACTIVE</h3>
             </div>
 
-            <div style={styles.statusCard}>
+            <div className="user-status-card" style={styles.statusCard}>
               <p style={styles.statusLabel}>STATUS</p>
               <h3 style={styles.statusValue}>
                 <span style={styles.liveDot}></span> LIVE
@@ -163,7 +192,7 @@ function Dashboard() {
           </div>
         </div>
 
-        <div style={styles.mainGrid}>
+        <div className="user-main-grid" style={styles.mainGrid}>
           <div style={styles.leftColumn}>
             <div style={styles.panel}>
               <div style={styles.panelHeaderRow}>
@@ -171,7 +200,7 @@ function Dashboard() {
                 <span style={styles.badge}>INVESTOR</span>
               </div>
 
-              <div style={styles.statGrid}>
+              <div className="stat-grid-layout" style={styles.statGrid}>
                 <div style={styles.statBox}>
                   <p style={styles.statLabel}>CURRENT BALANCE</p>
                   <h2 style={styles.statValue}>{formatCurrency(user?.balance)}</h2>
@@ -253,7 +282,7 @@ function Dashboard() {
             <div style={styles.panel}>
               <h3 style={styles.panelHeading}>MY ORDER BOOK</h3>
               
-              <div style={styles.orderBookGrid}>
+              <div className="order-book-grid-layout" style={styles.orderBookGrid}>
                 <div style={styles.orderSection}>
                   <h4 style={styles.orderSubheading}>BUY ORDERS (PENDING)</h4>
                   <div style={styles.tableWrap}>

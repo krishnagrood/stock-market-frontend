@@ -133,12 +133,12 @@ export default function AdminDashboard() {
   const deleteStock = (stockId) => confirmAction("DELETE_STOCK", stockId, "Permanently DELETE this stock?");
 
   const addOrder = async () => {
-    const { buyerTeam, sellerTeam, buyerUsername, sellerUsername, stockName, price, quantity } = orderForm;
+    const { buyerUsername, sellerUsername, stockName, price, quantity } = orderForm;
     if (!buyerUsername && !sellerUsername) { alert("Enter at least one username"); return; }
     if (!stockName || !price || !quantity) { alert("Fill all stock details"); return; }
     try {
       const res = await axios.post(`${API_BASE}/admin/orders/add`, {
-        buyerTeam, sellerTeam, buyerUsername: buyerUsername.trim(), sellerUsername: sellerUsername.trim(), stockName, price: Number(price), quantity: Number(quantity)
+        buyerTeam: "", sellerTeam: "", buyerUsername: buyerUsername.trim(), sellerUsername: sellerUsername.trim(), stockName, price: Number(price), quantity: Number(quantity)
       });
       if (res.data.success) {
         alert("Order added successfully ✅");
@@ -201,38 +201,35 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="bg-background text-on-surface h-screen flex flex-col antialiased dark overflow-hidden relative">
-      <style>
-        {`
-          .scanline-overlay {
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-          }
-          .glass-panel {
-            backdrop-filter: blur(20px);
-            background: rgba(25, 28, 27, 0.6);
-            border: 1px solid rgba(107, 251, 154, 0.08);
-          }
-          .pulsate {
-            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-          }
-          @keyframes pulse-glow {
-            0%, 100% { opacity: 1; filter: drop-shadow(0 0 2px #4ade80); }
-            50% { opacity: 0.7; filter: drop-shadow(0 0 8px #4ade80); }
-          }
-          
-          ::-webkit-scrollbar { width: 8px; }
-          ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: rgba(74,222,128,0.2); border-radius: 4px; }
-          ::-webkit-scrollbar-thumb:hover { background: rgba(74,222,128,0.4); }
-        `}
-      </style>
+    <div className="bg-background text-on-surface h-screen flex flex-col antialiased dark">
+      <style>{`
+        .scanline-overlay {
+          background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+          background-size: 100% 4px, 3px 100%;
+          pointer-events: none;
+        }
+        .glass-panel {
+          backdrop-filter: blur(20px);
+          background: rgba(25, 28, 27, 0.6);
+          border: 1px solid rgba(107, 251, 154, 0.08);
+        }
+        .pulsate {
+          animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 1; filter: drop-shadow(0 0 2px #4ade80); }
+          50% { opacity: 0.7; filter: drop-shadow(0 0 8px #4ade80); }
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(74,222,128,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(74,222,128,0.4); }
+      `}</style>
       
       <div className="scanline-overlay fixed inset-0 z-[100] opacity-5"></div>
-      
+
       {/* TopAppBar */}
-      <header className="bg-[#111413]/80 backdrop-blur-xl border-b border-[#6bfb9a]/10 shadow-[0_0_20px_rgba(74,222,128,0.1)] flex justify-between items-center px-6 h-16 w-full shrink-0 relative z-50">
+      <header className="bg-[#111413]/80 backdrop-blur-xl border-b border-[#6bfb9a]/10 shadow-[0_0_20px_rgba(74,222,128,0.1)] docked full-width top-0 z-50 flex justify-between items-center px-6 h-16 w-full shrink-0">
         <div className="flex items-center gap-6">
           <div className="text-[#4ade80] font-black text-xl tracking-tighter flex items-center gap-2">
             <span className="material-symbols-outlined">terminal</span>
@@ -246,16 +243,61 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <div className="h-8 w-[1px] bg-outline-variant/30"></div>
           <button onClick={handleLogout} className="flex items-center gap-2 text-on-surface/50 hover:text-error transition-colors px-3 py-2 hover:bg-error/5 rounded-lg group">
             <span className="font-headline uppercase tracking-widest text-xs">logout</span>
             <span className="material-symbols-outlined text-sm">logout</span>
           </button>
         </div>
       </header>
-      
-      <div className="flex flex-1 overflow-hidden relative z-40">
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* SideNavBar */}
+        <aside className="bg-[#191c1b] border-r border-white/5 fixed left-0 top-16 h-[calc(100vh-64px)] w-64 bg-gradient-to-b from-[#191c1b] to-[#111413] flex flex-col py-4 gap-2 z-40 hidden md:flex shrink-0">
+          <div className="px-6 mb-6">
+            <div className="text-primary font-mono text-[10px] uppercase tracking-tighter opacity-50 mb-1">Authenticated As</div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/40">
+                <span className="material-symbols-outlined text-primary text-sm">admin_panel_settings</span>
+              </div>
+              <div>
+                <div className="text-xs font-bold text-on-surface">System Core</div>
+                <div className="text-[10px] font-mono text-primary/70">v4.2.0-Stable</div>
+              </div>
+            </div>
+          </div>
+          <nav className="flex-1 space-y-1">
+            <div className="bg-[#4ade80]/10 text-[#4ade80] border-r-2 border-[#4ade80] shadow-[inset_-10px_0_15px_rgba(74,222,128,0.05)] px-6 py-3 flex items-center gap-4 cursor-pointer">
+              <span className="material-symbols-outlined">reorder</span>
+              <span className="font-['Inter'] font-mono text-xs uppercase">Order Queue</span>
+            </div>
+            <div className="text-[#e2e3e0]/40 hover:bg-white/5 hover:text-[#e2e3e0] px-6 py-3 flex items-center gap-4 cursor-pointer hover:translate-x-1 transition-transform duration-150">
+              <span className="material-symbols-outlined">inventory_2</span>
+              <span className="font-['Inter'] font-mono text-xs uppercase">Stock Admin</span>
+            </div>
+            <div className="text-[#e2e3e0]/40 hover:bg-white/5 hover:text-[#e2e3e0] px-6 py-3 flex items-center gap-4 cursor-pointer hover:translate-x-1 transition-transform duration-150">
+              <span className="material-symbols-outlined">group_add</span>
+              <span className="font-['Inter'] font-mono text-xs uppercase">User Registry</span>
+            </div>
+            <div className="text-[#e2e3e0]/40 hover:bg-white/5 hover:text-[#e2e3e0] px-6 py-3 flex items-center gap-4 cursor-pointer hover:translate-x-1 transition-transform duration-150">
+              <span className="material-symbols-outlined">account_balance_wallet</span>
+              <span className="font-['Inter'] font-mono text-xs uppercase">Allocations</span>
+            </div>
+          </nav>
+          <div className="mt-auto border-t border-white/5 pt-4">
+            <div className="text-[#e2e3e0]/40 hover:bg-white/5 hover:text-[#e2e3e0] px-6 py-3 flex items-center gap-4 cursor-pointer">
+              <span className="material-symbols-outlined">settings</span>
+              <span className="font-['Inter'] font-mono text-xs uppercase">Settings</span>
+            </div>
+            <div className="text-[#e2e3e0]/40 hover:bg-white/5 hover:text-[#e2e3e0] px-6 py-3 flex items-center gap-4 cursor-pointer">
+              <span className="material-symbols-outlined">help_center</span>
+              <span className="font-['Inter'] font-mono text-xs uppercase">Support</span>
+            </div>
+          </div>
+        </aside>
+
         {/* Main Content */}
-        <main className="flex-1 p-6 overflow-y-auto space-y-6">
+        <main className="flex-1 md:ml-64 p-6 overflow-y-auto space-y-6">
           
           {/* Top Control Panel */}
           <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -301,7 +343,7 @@ export default function AdminDashboard() {
           {/* Main Operational Grid */}
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 pb-6">
             
-            {/* Left Column */}
+            {/* Left Column: Market Operations */}
             <div className="xl:col-span-7 space-y-6">
               
               {/* Process & Manual Orders Section */}
@@ -309,7 +351,7 @@ export default function AdminDashboard() {
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="font-headline text-sm font-bold uppercase tracking-widest flex items-center gap-2">
                     <span className="material-symbols-outlined text-primary text-base">engineering</span>
-                    Order Execution Network
+                    Order Execution Engine
                   </h2>
                   <div className="flex gap-2">
                     <button onClick={processOrders} disabled={processingOrders} className="bg-surface-container-high hover:bg-primary hover:text-on-primary transition-all px-3 py-1.5 text-[10px] font-headline font-black uppercase tracking-widest border border-outline-variant/30 rounded">
@@ -324,10 +366,10 @@ export default function AdminDashboard() {
                 {/* Manual Order Entry */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
                    <div className="space-y-1">
-                    <input className="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded p-2 font-mono text-xs placeholder:text-on-surface/20 text-white" placeholder="Buyer" value={orderForm.buyerUsername} onChange={e => setOrderForm({...orderForm, buyerUsername: e.target.value})} type="text"/>
+                    <input className="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded p-2 font-mono text-xs placeholder:text-on-surface/20 text-white" placeholder="Buyer Username" value={orderForm.buyerUsername} onChange={e => setOrderForm({...orderForm, buyerUsername: e.target.value})} type="text"/>
                   </div>
                   <div className="space-y-1">
-                    <input className="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded p-2 font-mono text-xs placeholder:text-on-surface/20 text-white" placeholder="Seller" value={orderForm.sellerUsername} onChange={e => setOrderForm({...orderForm, sellerUsername: e.target.value})} type="text"/>
+                    <input className="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded p-2 font-mono text-xs placeholder:text-on-surface/20 text-white" placeholder="Seller Username" value={orderForm.sellerUsername} onChange={e => setOrderForm({...orderForm, sellerUsername: e.target.value})} type="text"/>
                   </div>
                   <div className="space-y-1">
                     <input className="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded p-2 font-mono text-xs placeholder:text-on-surface/20 text-white" placeholder="Ticker" value={orderForm.stockName} onChange={e => setOrderForm({...orderForm, stockName: e.target.value})} type="text"/>
@@ -432,7 +474,7 @@ export default function AdminDashboard() {
               
             </div>
 
-            {/* Right Column */}
+            {/* Right Column: User Management */}
             <div className="xl:col-span-5 space-y-6">
               
               {/* User Creation */}
@@ -518,7 +560,7 @@ export default function AdminDashboard() {
           </div>
         </main>
       </div>
-      
+
       {/* Footer */}
       <footer className="h-6 shrink-0 bg-surface-container-lowest border-t border-outline-variant/10 flex items-center px-6 justify-between z-50">
         <div className="flex gap-4">

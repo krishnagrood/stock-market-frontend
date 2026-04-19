@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Dashboard() {
@@ -6,6 +7,7 @@ function Dashboard() {
   const [stocks, setStocks] = useState([]);
   const [holdings, setHoldings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const userId = localStorage.getItem("userId");
 
@@ -32,6 +34,12 @@ function Dashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+    navigate("/login");
   };
 
   const portfolioValue = useMemo(() => {
@@ -121,6 +129,10 @@ function Dashboard() {
                 <span style={styles.liveDot}></span> LIVE
               </h3>
             </div>
+
+            <button style={styles.logoutBtn} onClick={handleLogout}>
+              LOGOUT
+            </button>
           </div>
         </div>
 
@@ -659,6 +671,22 @@ const styles = {
     letterSpacing: "3px",
     fontWeight: 700,
     fontSize: "14px",
+  },
+
+  logoutBtn: {
+    minWidth: "150px",
+    background: "rgba(239, 68, 68, 0.1)",
+    border: "1px solid rgba(239, 68, 68, 0.3)",
+    borderRadius: "22px",
+    padding: "18px 24px",
+    color: "#ff6b6b",
+    fontSize: "14px",
+    fontWeight: 800,
+    letterSpacing: "2px",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    backdropFilter: "blur(10px)",
+    textTransform: "uppercase",
   },
 };
 

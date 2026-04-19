@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function AdminDashboard() {
@@ -6,6 +7,7 @@ function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [price, setPrice] = useState({});
   const [loadingId, setLoadingId] = useState(null);
+  const navigate = useNavigate();
 
   const [newStock, setNewStock] = useState({
     name: "",
@@ -45,6 +47,12 @@ function AdminDashboard() {
     fetchOrders();
     fetchPreviewPrices();
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
 
   const fetchStocks = async () => {
     try {
@@ -559,7 +567,12 @@ function AdminDashboard() {
                 <p style={styles.statValue}>{tradingOpen ? "LIVE" : "IDLE"}</p>
               </div>
             </div>
+            </div>
           </div>
+
+          <button style={styles.logoutBtn} onClick={handleLogout}>
+            LOGOUT
+          </button>
         </div>
 
         <div className="admin-main-grid" style={styles.mainGrid}>
@@ -1700,6 +1713,21 @@ const styles = {
     height: "2px",
     background:
       "linear-gradient(90deg, transparent 0%, rgba(78, 222, 163, 0.2) 50%, transparent 100%)"
+  },
+
+  logoutBtn: {
+    padding: "16px 24px",
+    background: "rgba(239, 68, 68, 0.08)",
+    border: "1px solid rgba(239, 68, 68, 0.2)",
+    borderRadius: "14px",
+    color: "#ff6b6b",
+    fontSize: "11px",
+    fontWeight: 800,
+    letterSpacing: "0.15em",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    textTransform: "uppercase",
+    marginLeft: "20px"
   }
 };
 

@@ -567,12 +567,11 @@ function AdminDashboard() {
                 <p style={styles.statValue}>{tradingOpen ? "LIVE" : "IDLE"}</p>
               </div>
             </div>
-            </div>
-          </div>
 
-          <button style={styles.logoutBtn} onClick={handleLogout}>
-            LOGOUT
-          </button>
+            <button style={styles.logoutBtn} onClick={handleLogout}>
+              LOGOUT
+            </button>
+          </div>
         </div>
 
         <div className="admin-main-grid" style={styles.mainGrid}>

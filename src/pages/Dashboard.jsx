@@ -59,6 +59,14 @@ function Dashboard() {
     })}`;
   };
 
+  const getMinBid = (price) => {
+    return Math.max((price * 0.80), 0.01).toFixed(2);
+  };
+
+  const getMaxBid = (price) => {
+    return (price * 1.20).toFixed(2);
+  };
+
   if (loading) {
     return (
       <div style={styles.page}>
@@ -181,6 +189,8 @@ function Dashboard() {
                       <th style={styles.th}>STOCK NAME</th>
                       <th style={styles.th}>QUANTITY</th>
                       <th style={styles.th}>CURRENT PRICE</th>
+                      <th style={styles.thBid}>MIN BID</th>
+                      <th style={styles.thBid}>MAX BID</th>
                       <th style={styles.th}>TOTAL VALUE</th>
                     </tr>
                   </thead>
@@ -191,12 +201,14 @@ function Dashboard() {
                           <td style={styles.td}>{holding.stockName}</td>
                           <td style={styles.td}>{holding.quantity}</td>
                           <td style={styles.td}>{formatCurrency(holding.currentPrice)}</td>
+                          <td style={styles.tdBidMin}>₹{getMinBid(holding.currentPrice)}</td>
+                          <td style={styles.tdBidMax}>₹{getMaxBid(holding.currentPrice)}</td>
                           <td style={styles.td}>{formatCurrency(holding.totalValue)}</td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td style={styles.emptyCell} colSpan="4">
+                        <td style={styles.emptyCell} colSpan="6">
                           NO HOLDINGS AVAILABLE
                         </td>
                       </tr>
@@ -238,6 +250,8 @@ function Dashboard() {
                     <tr>
                       <th style={styles.th}>STOCK NAME</th>
                       <th style={styles.th}>PRICE</th>
+                      <th style={styles.thBid}>MIN BID</th>
+                      <th style={styles.thBid}>MAX BID</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -246,11 +260,13 @@ function Dashboard() {
                         <tr key={stock.id} style={styles.tr}>
                           <td style={styles.td}>{stock.name}</td>
                           <td style={styles.td}>{formatCurrency(stock.price)}</td>
+                          <td style={styles.tdBidMin}>₹{getMinBid(stock.price)}</td>
+                          <td style={styles.tdBidMax}>₹{getMaxBid(stock.price)}</td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td style={styles.emptyCell} colSpan="2">
+                        <td style={styles.emptyCell} colSpan="4">
                           NO STOCKS AVAILABLE
                         </td>
                       </tr>
@@ -581,6 +597,37 @@ const styles = {
     padding: "17px 16px",
     color: "#f5fff9",
     fontSize: "15px",
+  },
+
+  thBid: {
+    textAlign: "center",
+    padding: "15px 16px",
+    color: "rgba(255,255,255,0.55)",
+    fontSize: "12px",
+    fontWeight: 700,
+    letterSpacing: "2px",
+    textTransform: "uppercase",
+    borderBottom: "1px solid rgba(255,255,255,0.08)",
+  },
+
+  tdBidMin: {
+    padding: "17px 16px",
+    color: "#ff8a8a",
+    fontSize: "14px",
+    fontWeight: 700,
+    textAlign: "center",
+    background: "rgba(255, 80, 80, 0.06)",
+    borderRadius: "8px",
+  },
+
+  tdBidMax: {
+    padding: "17px 16px",
+    color: "#7dffb8",
+    fontSize: "14px",
+    fontWeight: 700,
+    textAlign: "center",
+    background: "rgba(80, 255, 150, 0.06)",
+    borderRadius: "8px",
   },
 
   emptyCell: {

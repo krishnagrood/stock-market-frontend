@@ -1101,8 +1101,6 @@ function AdminDashboard() {
                 <table style={styles.queueTable}>
                   <thead>
                     <tr>
-                      <th style={styles.queueTh}>Buyer Agent</th>
-                      <th style={styles.queueTh}>Seller Agent</th>
                       <th style={styles.queueTh}>Buyer</th>
                       <th style={styles.queueTh}>Seller</th>
                       <th style={styles.queueTh}>Ticker</th>
@@ -1120,8 +1118,6 @@ function AdminDashboard() {
                   <tbody>
                     {orders.map((order) => (
                       <tr key={order.id} style={styles.queueRow}>
-                        <td style={styles.queueTd}>{order.buyerTeam}</td>
-                        <td style={styles.queueTd}>{order.sellerTeam}</td>
                         <td style={styles.queueTd}>
                           {order.buyerUsername || "-"}
                         </td>

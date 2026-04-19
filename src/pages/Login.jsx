@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
+import MarketClashSplash from "../components/MarketClashSplash";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [logoRipples, setLogoRipples] = useState([]);
+  const [showSplash, setShowSplash] = useState(false);
+  const [pendingUser, setPendingUser] = useState(null);
   const navigate = useNavigate();
 
   const login = async () => {
@@ -18,18 +21,22 @@ function Login() {
       });
 
       const user = response.data;
-
       localStorage.setItem("userId", user.id);
       localStorage.setItem("role", user.role);
 
-      if (user.role === "ADMIN") {
-        navigate("/admin");
-      } else {
-        navigate("/dashboard");
-      }
+      setPendingUser(user);
+      setShowSplash(true);
     } catch (error) {
       console.error("Login error:", error);
       alert("Invalid credentials");
+    }
+  };
+
+  const handleSplashComplete = () => {
+    if (pendingUser.role === "ADMIN") {
+      navigate("/admin");
+    } else {
+      navigate("/dashboard");
     }
   };
 
@@ -57,6 +64,7 @@ function Login() {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[#050706] text-white">
+      {showSplash && <MarketClashSplash onComplete={handleSplashComplete} />}
       <style>
         {`
           @keyframes titleGlow {

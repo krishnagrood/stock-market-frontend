@@ -337,8 +337,6 @@ function AdminDashboard() {
 
   const addOrder = async () => {
     const {
-      buyerTeam,
-      sellerTeam,
       buyerUsername,
       sellerUsername,
       stockName,
@@ -347,8 +345,6 @@ function AdminDashboard() {
     } = orderForm;
 
     if (
-      !buyerTeam ||
-      !sellerTeam ||
       !buyerUsername ||
       !sellerUsername ||
       !stockName ||
@@ -941,29 +937,7 @@ function AdminDashboard() {
               <h3 style={styles.sectionTitleWithBorder}>Admin Order Terminal</h3>
 
               <div className="order-grid-layout" style={styles.orderGrid}>
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Buyer Agent</label>
-                  <input
-                    style={styles.inputSmall}
-                    placeholder="Buyer Team"
-                    value={orderForm.buyerTeam}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, buyerTeam: e.target.value })
-                    }
-                  />
-                </div>
 
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Seller Agent</label>
-                  <input
-                    style={styles.inputSmall}
-                    placeholder="Seller Team"
-                    value={orderForm.sellerTeam}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, sellerTeam: e.target.value })
-                    }
-                  />
-                </div>
 
                 <div style={styles.fieldBlock}>
                   <label style={styles.fieldLabel}>Buyer Username</label>

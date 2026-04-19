@@ -115,7 +115,7 @@ function Dashboard() {
       <div style={styles.container}>
         <div style={styles.topBrandBlock}>
           <p style={styles.brandTopText}>INVESTOR ACCESS</p>
-          <h1 style={styles.brandMain}>MOCK.STOCK</h1>
+          <h1 style={styles.brandMain}>MARKET ODYSSEY</h1>
           <div style={styles.brandLine}></div>
         </div>
 

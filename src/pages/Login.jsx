@@ -239,7 +239,7 @@ function Login() {
                 "titleGlow 3.2s ease-in-out infinite alternate, shimmerSweep 6.2s linear infinite",
             }}
           >
-            MOCKSTOCK
+            MARKET ODYSSEY
           </h1>
 
           <p className="mt-3 text-[11px] uppercase tracking-[0.45em] text-green-400/90 md:text-xs">
@@ -352,7 +352,7 @@ function Login() {
       </main>
 
       <footer className="relative z-10 px-6 pb-6 pt-4 text-center text-[11px] tracking-[0.08em] text-gray-600">
-        © 2026 MOCKSTOCK • ALL RIGHTS RESERVED
+        © 2026 MARKET ODYSSEY • ALL RIGHTS RESERVED
       </footer>
     </div>
   );

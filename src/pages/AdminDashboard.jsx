@@ -535,7 +535,7 @@ function AdminDashboard() {
       <header style={styles.header}>
         <div style={styles.headerInner}>
           <span style={styles.headerLabel}>Enterprise Access</span>
-          <h1 style={styles.headerTitle}>MOCK.STOCK</h1>
+          <h1 style={styles.headerTitle}>MARKET ODYSSEY</h1>
           <div style={styles.headerLine} />
         </div>
       </header>

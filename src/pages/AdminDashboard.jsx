@@ -133,155 +133,85 @@ function AdminDashboard() {
     }
   };
 
-  const masterReset = async (e) => {
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, type: "", data: null, message: "" });
+
+  const confirmAction = (type, data, message) => {
+    setConfirmModal({ isOpen: true, type, data, message });
+  };
+
+  const executeConfirm = async () => {
+    const { type, data } = confirmModal;
+    setConfirmModal({ isOpen: false, type: "", data: null, message: "" });
+
+    if (type === "RESET") {
+      try {
+        const res = await axios.post(`${API_BASE}/admin/masterReset`);
+        if (res.data.success) {
+          alert("Success: " + res.data.message);
+          await Promise.all([
+            fetchStocks(),
+            fetchUsers(),
+            fetchOrders(),
+            fetchPreviewPrices()
+          ]);
+          setTradingOpen(false);
+        } else {
+          alert("Reset failed: " + (res.data.message || "Unknown error"));
+        }
+      } catch (err) {
+        console.error("Master Reset Error:", err);
+        alert("Error: Could not complete Master Reset");
+      }
+    } else if (type === "DELETE_USER") {
+      try {
+        const res = await axios.delete(`${API_BASE}/admin/deleteUser`, {
+          params: { userId: data }
+        });
+
+        if (res.data.success) {
+          alert("User deleted!");
+          fetchUsers();
+        } else {
+          alert(res.data.message || "Delete failed");
+        }
+      } catch (err) {
+        console.error("Delete User Error:", err);
+        alert("Failed to delete user");
+      }
+    } else if (type === "DELETE_STOCK") {
+      try {
+        const res = await axios.delete(`${API_BASE}/admin/deleteStock`, {
+          params: { stockId: data }
+        });
+
+        if (res.data.success) {
+          alert("Deleted!");
+          fetchStocks();
+        } else {
+          alert(res.data.message || "Delete failed");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Delete failed");
+      }
+    }
+  };
+
+  const cancelConfirm = () => {
+    setConfirmModal({ isOpen: false, type: "", data: null, message: "" });
+  };
+
+  const masterReset = (e) => {
     if (e) e.preventDefault();
-    console.log("Master Reset Triggered");
-    
-    const msg = "MASTER RESET WARNING:\n\n1. All Stocks will be deleted\n2. All Orders will be cleared\n3. All User Holdings will be wiped\n4. All Balances reset to 500,000\n\nProceed with Reset?";
-    
-    if (!window.confirm(msg)) return;
-
-    try {
-      const res = await axios.post(`${API_BASE}/admin/masterReset`);
-      if (res.data.success) {
-        alert("Success: " + res.data.message);
-        await Promise.all([
-          fetchStocks(),
-          fetchUsers(),
-          fetchOrders(),
-          fetchPreviewPrices()
-        ]);
-        setTradingOpen(false);
-      } else {
-        alert("Reset failed: " + (res.data.message || "Unknown error"));
-      }
-    } catch (err) {
-      console.error("Master Reset Error:", err);
-      alert("Error: Could not complete Master Reset");
-    }
+    confirmAction("RESET", null, "MASTER RESET WARNING:\n\n1. All Stocks will be deleted\n2. All Orders will be cleared\n3. All User Holdings will be wiped\n4. All Balances reset to 500,000\n\nProceed with Reset?");
   };
 
-  const updatePrice = async (stockId) => {
-    const newPrice = price[stockId];
-
-    if (!newPrice || Number(newPrice) <= 0) {
-      alert("Enter valid price");
-      return;
-    }
-
-    try {
-      setLoadingId(stockId);
-
-      await axios.put(`${API_BASE}/admin/updatePrice`, null, {
-        params: { stockId, price: Number(newPrice) }
-      });
-
-      alert("Price updated!");
-      fetchStocks();
-    } catch (err) {
-      console.error(err);
-      alert("Update failed");
-    } finally {
-      setLoadingId(null);
-    }
+  const deleteUser = (userId) => {
+    confirmAction("DELETE_USER", userId, "Permanently DELETE this user account?");
   };
 
-  const addStock = async (e) => {
-    if (e) e.preventDefault();
-    if (!newStock.name || !newStock.price) {
-      alert("Please fill both Stock Name and Price");
-      return;
-    }
-
-    try {
-      const res = await axios.post(`${API_BASE}/admin/addStock`, {
-        name: newStock.name.trim(),
-        price: Number(newStock.price)
-      });
-
-      if (res.data.success) {
-        alert("Stock added successfully!");
-        setNewStock({ name: "", price: "" });
-        fetchStocks();
-      } else {
-        alert("Error: " + (res.data.message || "Failed to add stock"));
-      }
-    } catch (err) {
-      console.error("Add Stock Error:", err);
-      alert("Critical Error: Failed to connect to server");
-    }
-  };
-
-  const deleteStock = async (stockId) => {
-    if (!window.confirm("Delete this stock?")) return;
-
-    try {
-      const res = await axios.delete(`${API_BASE}/admin/deleteStock`, {
-        params: { stockId }
-      });
-
-      if (res.data.success) {
-        alert("Deleted!");
-        fetchStocks();
-      } else {
-        alert(res.data.message || "Delete failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Delete failed");
-    }
-  };
-
-  const createUser = async (e) => {
-    if (e) e.preventDefault();
-    const { username, password, balance } = userForm;
-
-    if (!username || !password) {
-      alert("Username and Password are required");
-      return;
-    }
-
-    try {
-      setCreatingUser(true);
-      const res = await axios.post(`${API_BASE}/admin/createUser`, {
-        username: username.trim(),
-        password: password.trim(),
-        balance: Number(balance)
-      });
-
-      if (res.data.success) {
-        alert(res.data.message);
-        setUserForm({ username: "", password: "", balance: "500000" });
-        fetchUsers();
-      } else {
-        alert("Error: " + (res.data.message || "Failed to create user"));
-      }
-    } catch (err) {
-      console.error("Create User Error:", err);
-      alert("Failed to create user account");
-    } finally {
-      setCreatingUser(false);
-    }
-  };
-
-  const deleteUser = async (userId) => {
-    if (!window.confirm("Permanently DELETE this user account?")) return;
-
-    try {
-      const res = await axios.delete(`${API_BASE}/admin/deleteUser`, {
-        params: { userId }
-      });
-
-      if (res.data.success) {
-        alert("User deleted!");
-        fetchUsers();
-      } else {
-        alert(res.data.message || "Delete failed");
-      }
-    } catch (err) {
-      console.error("Delete User Error:", err);
-      alert("Failed to delete user");
-    }
+  const deleteStock = (stockId) => {
+    confirmAction("DELETE_STOCK", stockId, "Delete this stock?");
   };
 
 
@@ -1167,6 +1097,24 @@ function AdminDashboard() {
         </div>
       </main>
 
+      {/* CUSTOM CONFIRM MODAL */}
+      {confirmModal.isOpen && (
+        <div style={styles.modalOverlay}>
+          <div style={styles.modalContent}>
+            <div style={styles.modalHeader}>
+              <h3 style={styles.modalTitle}>Confirm Action</h3>
+            </div>
+            <div style={styles.modalBody}>
+              <p style={styles.modalMessage}>{confirmModal.message}</p>
+            </div>
+            <div style={styles.modalActions}>
+              <button style={styles.modalCancelBtn} onClick={cancelConfirm}>CANCEL</button>
+              <button style={styles.modalConfirmBtn} onClick={executeConfirm}>CONFIRM</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <footer style={styles.footer}>
         <p style={styles.footerText}>PROTOCOL SOVEREIGN ALPHA — SYSTEM SECURED</p>
       </footer>
@@ -1928,6 +1876,88 @@ const styles = {
     transition: "all 0.3s ease",
     textTransform: "uppercase",
     marginLeft: "20px"
+  },
+
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0, 0, 0, 0.75)",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 99999
+  },
+
+  modalContent: {
+    background: "linear-gradient(180deg, #121212 0%, #0a0a0c 100%)",
+    border: "1px solid rgba(78, 222, 163, 0.2)",
+    borderRadius: "24px",
+    padding: "32px",
+    width: "400px",
+    maxWidth: "90%",
+    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.8)",
+    textAlign: "center"
+  },
+
+  modalHeader: {
+    marginBottom: "20px"
+  },
+
+  modalTitle: {
+    margin: 0,
+    color: "#4edea3",
+    fontSize: "18px",
+    fontWeight: 900,
+    letterSpacing: "0.15em",
+    textTransform: "uppercase"
+  },
+
+  modalBody: {
+    marginBottom: "32px"
+  },
+
+  modalMessage: {
+    color: "#e2e8f0",
+    fontSize: "14px",
+    lineHeight: "1.6",
+    whiteSpace: "pre-wrap"
+  },
+
+  modalActions: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "16px"
+  },
+
+  modalCancelBtn: {
+    padding: "12px 24px",
+    background: "transparent",
+    border: "1px solid rgba(255, 255, 255, 0.1)",
+    borderRadius: "12px",
+    color: "#8a938c",
+    fontSize: "12px",
+    fontWeight: 800,
+    letterSpacing: "0.1em",
+    cursor: "pointer",
+    transition: "all 0.2s ease"
+  },
+
+  modalConfirmBtn: {
+    padding: "12px 24px",
+    background: "linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(185, 28, 28, 0.25))",
+    border: "1px solid rgba(239, 68, 68, 0.35)",
+    borderRadius: "12px",
+    color: "#ff6b6b",
+    fontSize: "12px",
+    fontWeight: 800,
+    letterSpacing: "0.1em",
+    cursor: "pointer",
+    boxShadow: "0 4px 20px rgba(239, 68, 68, 0.15)"
   }
 };
 

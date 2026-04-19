@@ -6,6 +6,7 @@ function Dashboard() {
   const [user, setUser] = useState(null);
   const [stocks, setStocks] = useState([]);
   const [holdings, setHoldings] = useState([]);
+  const [userOrders, setUserOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,15 +21,17 @@ function Dashboard() {
       setLoading(true);
 
       const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
-      const [userRes, stocksRes, holdingsRes] = await Promise.all([
+      const [userRes, stocksRes, holdingsRes, ordersRes] = await Promise.all([
         axios.get(`${API_BASE}/user/${userId}`),
         axios.get(`${API_BASE}/stocks`),
         axios.get(`${API_BASE}/holdings/${userId}`),
+        axios.get(`${API_BASE}/admin/orders/user/${userId}`),
       ]);
 
       setUser(userRes.data || null);
       setStocks(stocksRes.data || []);
       setHoldings(holdingsRes.data || []);
+      setUserOrders(ordersRes.data || []);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {
@@ -51,6 +54,22 @@ function Dashboard() {
   const totalShares = useMemo(() => {
     return holdings.reduce((sum, item) => sum + (item.quantity || 0), 0);
   }, [holdings]);
+
+  const totalPnL = useMemo(() => {
+    return holdings.reduce((sum, item) => {
+      const currentVal = (item.currentPrice || 0) * (item.quantity || 0);
+      const investedVal = item.totalInvestment || 0;
+      return sum + (currentVal - investedVal);
+    }, 0);
+  }, [holdings]);
+
+  const buyOrders = useMemo(() => {
+    return userOrders.filter(o => o.buyerUserId === Number(userId));
+  }, [userOrders, userId]);
+
+  const sellOrders = useMemo(() => {
+    return userOrders.filter(o => o.sellerUserId === Number(userId));
+  }, [userOrders, userId]);
 
   const formatCurrency = (value) => {
     return `₹${Number(value || 0).toLocaleString("en-IN", {
@@ -172,6 +191,13 @@ function Dashboard() {
                   <p style={styles.statLabel}>TOTAL SHARES</p>
                   <h2 style={styles.statValue}>{totalShares}</h2>
                 </div>
+
+                <div style={styles.statBox}>
+                  <p style={styles.statLabel}>TOTAL P&L</p>
+                  <h2 style={{ ...styles.statValue, color: totalPnL >= 0 ? "#66ffb4" : "#ff6b6b" }}>
+                    {totalPnL >= 0 ? "+" : ""}{formatCurrency(totalPnL)}
+                  </h2>
+                </div>
               </div>
 
               <button style={styles.primaryButton} onClick={fetchDashboardData}>
@@ -188,24 +214,30 @@ function Dashboard() {
                     <tr>
                       <th style={styles.th}>STOCK NAME</th>
                       <th style={styles.th}>QUANTITY</th>
+                      <th style={styles.th}>AVG PRICE</th>
                       <th style={styles.th}>CURRENT PRICE</th>
-                      <th style={styles.thBid}>MIN BID</th>
-                      <th style={styles.thBid}>MAX BID</th>
                       <th style={styles.th}>TOTAL VALUE</th>
+                      <th style={styles.th}>P&L</th>
                     </tr>
                   </thead>
                   <tbody>
                     {holdings.length > 0 ? (
-                      holdings.map((holding, index) => (
-                        <tr key={holding.id || index} style={styles.tr}>
-                          <td style={styles.td}>{holding.stockName}</td>
-                          <td style={styles.td}>{holding.quantity}</td>
-                          <td style={styles.td}>{formatCurrency(holding.currentPrice)}</td>
-                          <td style={styles.tdBidMin}>₹{getMinBid(holding.currentPrice)}</td>
-                          <td style={styles.tdBidMax}>₹{getMaxBid(holding.currentPrice)}</td>
-                          <td style={styles.td}>{formatCurrency(holding.totalValue)}</td>
-                        </tr>
-                      ))
+                      holdings.map((holding, index) => {
+                        const avgPrice = holding.totalInvestment / holding.quantity;
+                        const pnl = (holding.currentPrice * holding.quantity) - holding.totalInvestment;
+                        return (
+                          <tr key={holding.id || index} style={styles.tr}>
+                            <td style={styles.td}>{holding.stockName}</td>
+                            <td style={styles.td}>{holding.quantity}</td>
+                            <td style={styles.td}>{formatCurrency(avgPrice)}</td>
+                            <td style={styles.td}>{formatCurrency(holding.currentPrice)}</td>
+                            <td style={styles.td}>{formatCurrency(holding.totalValue)}</td>
+                            <td style={{ ...styles.td, color: pnl >= 0 ? "#66ffb4" : "#ff6b6b", fontWeight: 700 }}>
+                              {pnl >= 0 ? "+" : ""}{formatCurrency(pnl)}
+                            </td>
+                          </tr>
+                        );
+                      })
                     ) : (
                       <tr>
                         <td style={styles.emptyCell} colSpan="6">
@@ -215,6 +247,68 @@ function Dashboard() {
                     )}
                   </tbody>
                 </table>
+              </div>
+            </div>
+
+            <div style={styles.panel}>
+              <h3 style={styles.panelHeading}>MY ORDER BOOK</h3>
+              
+              <div style={styles.orderBookGrid}>
+                <div style={styles.orderSection}>
+                  <h4 style={styles.orderSubheading}>BUY ORDERS (PENDING)</h4>
+                  <div style={styles.tableWrap}>
+                    <table style={styles.table}>
+                      <thead>
+                        <tr>
+                          <th style={styles.th}>STOCK</th>
+                          <th style={styles.th}>QTY</th>
+                          <th style={styles.th}>PRICE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {buyOrders.length > 0 ? (
+                          buyOrders.map(o => (
+                            <tr key={o.id} style={styles.tr}>
+                              <td style={styles.td}>{o.stockName}</td>
+                              <td style={styles.td}>{o.quantity}</td>
+                              <td style={styles.td}>{formatCurrency(o.price)}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr><td colSpan="3" style={styles.emptyCell}>NO PENDING BUYS</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div style={styles.orderSection}>
+                  <h4 style={styles.orderSubheading}>SELL ORDERS (PENDING)</h4>
+                  <div style={styles.tableWrap}>
+                    <table style={styles.table}>
+                      <thead>
+                        <tr>
+                          <th style={styles.th}>STOCK</th>
+                          <th style={styles.th}>QTY</th>
+                          <th style={styles.th}>PRICE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sellOrders.length > 0 ? (
+                          sellOrders.map(o => (
+                            <tr key={o.id} style={styles.tr}>
+                              <td style={styles.td}>{o.stockName}</td>
+                              <td style={styles.td}>{o.quantity}</td>
+                              <td style={styles.td}>{formatCurrency(o.price)}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr><td colSpan="3" style={styles.emptyCell}>NO PENDING SELLS</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -525,7 +619,7 @@ const styles = {
 
   statGrid: {
     display: "grid",
-    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
     gap: "18px",
     marginBottom: "22px",
   },
@@ -734,6 +828,28 @@ const styles = {
     transition: "all 0.3s ease",
     backdropFilter: "blur(10px)",
     textTransform: "uppercase",
+  },
+
+  orderBookGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "24px",
+    marginTop: "14px",
+  },
+
+  orderSection: {
+    background: "rgba(0,0,0,0.2)",
+    padding: "18px",
+    borderRadius: "18px",
+    border: "1px solid rgba(255,255,255,0.05)",
+  },
+
+  orderSubheading: {
+    margin: "0 0 14px 0",
+    fontSize: "12px",
+    color: "rgba(255,255,255,0.4)",
+    letterSpacing: "1px",
+    fontWeight: 700,
   },
 };
 

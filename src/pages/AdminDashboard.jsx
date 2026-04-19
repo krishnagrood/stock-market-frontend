@@ -125,6 +125,28 @@ function AdminDashboard() {
     }
   };
 
+  const masterReset = async () => {
+    if (!window.confirm("⚠️ MASTER RESET: This will DELETE all stocks, orders, holdings and reset ALL user balances to ₹5,00,000. Are you sure?")) return;
+    if (!window.confirm("🔴 FINAL CONFIRMATION: This action CANNOT be undone. Proceed?")) return;
+
+    try {
+      const res = await axios.post(`${API_BASE}/admin/masterReset`);
+      if (res.data.success) {
+        alert("✅ " + res.data.message);
+        fetchStocks();
+        fetchUsers();
+        fetchOrders();
+        fetchPreviewPrices();
+        setTradingOpen(false);
+      } else {
+        alert(res.data.message || "Reset failed");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Master Reset failed");
+    }
+  };
+
   const updatePrice = async (stockId) => {
     const newPrice = price[stockId];
 
@@ -588,6 +610,9 @@ function AdminDashboard() {
                 </button>
                 <button style={styles.darkBtn} onClick={stopTrading}>
                   Stop
+                </button>
+                <button style={styles.masterResetBtn} onClick={masterReset}>
+                  ⚠️ MASTER RESET
                 </button>
               </div>
             </section>
@@ -1344,6 +1369,23 @@ const styles = {
     letterSpacing: "0.2em",
     cursor: "pointer",
     border: "1px solid rgba(255,255,255,0.05)"
+  },
+
+  masterResetBtn: {
+    width: "100%",
+    background: "linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(185, 28, 28, 0.25))",
+    color: "#ff6b6b",
+    fontWeight: 800,
+    padding: "18px",
+    borderRadius: "18px",
+    fontSize: "12px",
+    textTransform: "uppercase",
+    letterSpacing: "0.2em",
+    cursor: "pointer",
+    border: "1px solid rgba(239, 68, 68, 0.35)",
+    marginTop: "8px",
+    boxShadow: "0 4px 20px rgba(239, 68, 68, 0.15)",
+    transition: "all 0.3s ease"
   },
 
   outlineGreenBtn: {

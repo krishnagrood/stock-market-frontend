@@ -105,26 +105,9 @@ function Dashboard() {
   return (
     <div style={styles.page}>
       <style>{`
-        @keyframes mockStockGlimmer {
-          0% {
         @media (max-width: 768px) {
           .user-main-grid {
             grid-template-columns: 1fr !important;
-          }
-          .user-hero-row {
-            flex-direction: column !important;
-            align-items: flex-start !important;
-            gap: 20px !important;
-          }
-          .user-status-wrap {
-            width: 100% !important;
-          }
-          .user-status-card {
-            flex: 1 !important;
-            min-width: 120px !important;
-          }
-          .brand-main-text {
-            font-size: 3rem !important;
           }
           .stat-grid-layout {
             grid-template-columns: 1fr 1fr !important;
@@ -132,120 +115,76 @@ function Dashboard() {
           .order-book-grid-layout {
             grid-template-columns: 1fr !important;
           }
-        }
-
-        @keyframes mockStockGlimmer {
-          0% {
-            background-position: -220% center;
-          }
-          100% {
-            background-position: 220% center;
-          }
-        }
-
-        @keyframes mockStockPulse {
-          0% {
-            text-shadow: 0 0 14px rgba(59, 255, 150, 0.10), 0 0 28px rgba(59, 255, 150, 0.08);
-          }
-          50% {
-            text-shadow: 0 0 18px rgba(59, 255, 150, 0.22), 0 0 42px rgba(59, 255, 150, 0.16);
-          }
-          100% {
-            text-shadow: 0 0 14px rgba(59, 255, 150, 0.10), 0 0 28px rgba(59, 255, 150, 0.08);
+          .top-nav {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 16px !important;
           }
         }
       `}</style>
 
-      <div style={styles.backgroundGlowOne}></div>
-      <div style={styles.backgroundGlowTwo}></div>
-      <div style={styles.gridOverlay}></div>
-
       <div style={styles.container}>
-        <div style={styles.topBrandBlock}>
-          <p style={styles.brandTopText}>INVESTOR ACCESS</p>
-          <h1 className="brand-main-text" style={styles.brandMain}>MARKET ODYSSEY</h1>
-          <div style={styles.brandLine}></div>
-        </div>
-
-        <div className="user-hero-row" style={styles.heroRow}>
-          <div>
-            <h2 style={styles.heroTitle}>USER PORTFOLIO TERMINAL</h2>
-            <p style={styles.heroSubtitle}>PREMIUM INVESTOR INTERFACE</p>
-          </div>
-
-          <div className="user-status-wrap" style={styles.statusWrap}>
-            <div className="user-status-card" style={styles.statusCard}>
-              <p style={styles.statusLabel}>ACCOUNT</p>
-              <h3 style={styles.statusValue}>ACTIVE</h3>
+        {/* Top Navigation */}
+        <div className="top-nav" style={styles.topNav}>
+          <h1 style={styles.brandMain}>MARKET ODYSSEY</h1>
+          
+          <div style={styles.navRight}>
+            <div style={styles.statusCard}>
+              <span style={styles.liveDot}></span>
+              <p style={styles.statusValue}>LIVE</p>
             </div>
-
-            <div className="user-status-card" style={styles.statusCard}>
-              <p style={styles.statusLabel}>STATUS</p>
-              <h3 style={styles.statusValue}>
-                <span style={styles.liveDot}></span> LIVE
-              </h3>
-            </div>
-
             <button style={styles.logoutBtn} onClick={handleLogout}>
               LOGOUT
             </button>
           </div>
         </div>
 
+        {/* Hero Stats Row */}
+        <div className="stat-grid-layout" style={styles.statGrid}>
+          <div style={styles.statBox}>
+            <p style={styles.statLabel}>PORTFOLIO VALUE</p>
+            <h2 style={styles.statValue}>{formatCurrency(portfolioValue)}</h2>
+          </div>
+          <div style={styles.statBox}>
+            <p style={styles.statLabel}>CASH BALANCE</p>
+            <h2 style={styles.statValue}>{formatCurrency(user?.balance)}</h2>
+          </div>
+          <div style={styles.statBox}>
+            <p style={styles.statLabel}>TOTAL HOLDINGS</p>
+            <h2 style={styles.statValue}>{totalHoldings}</h2>
+          </div>
+          <div style={styles.statBox}>
+            <p style={styles.statLabel}>NET P&L</p>
+            <h2 style={{ ...styles.statValue, color: totalPnL >= 0 ? "#4ade80" : "#ef4444" }}>
+              {totalPnL >= 0 ? "+" : ""}{formatCurrency(totalPnL)}
+            </h2>
+          </div>
+        </div>
+
+        {/* Main Grid */}
         <div className="user-main-grid" style={styles.mainGrid}>
+          
+          {/* Left Column */}
           <div style={styles.leftColumn}>
+            
+            {/* Holdings Table */}
             <div style={styles.panel}>
               <div style={styles.panelHeaderRow}>
-                <h3 style={styles.panelHeading}>ACCOUNT OVERVIEW</h3>
-                <span style={styles.badge}>INVESTOR</span>
+                <h3 style={styles.panelHeading}>ACTIVE HOLDINGS</h3>
+                <button style={{...styles.logoutBtn, color: '#4ade80', borderColor: 'rgba(74, 222, 128, 0.3)'}} onClick={fetchDashboardData}>
+                  REFRESH
+                </button>
               </div>
-
-              <div className="stat-grid-layout" style={styles.statGrid}>
-                <div style={styles.statBox}>
-                  <p style={styles.statLabel}>CURRENT BALANCE</p>
-                  <h2 style={styles.statValue}>{formatCurrency(user?.balance)}</h2>
-                </div>
-
-                <div style={styles.statBox}>
-                  <p style={styles.statLabel}>PORTFOLIO VALUE</p>
-                  <h2 style={styles.statValue}>{formatCurrency(portfolioValue)}</h2>
-                </div>
-
-                <div style={styles.statBox}>
-                  <p style={styles.statLabel}>TOTAL HOLDINGS</p>
-                  <h2 style={styles.statValue}>{totalHoldings}</h2>
-                </div>
-
-                <div style={styles.statBox}>
-                  <p style={styles.statLabel}>TOTAL SHARES</p>
-                  <h2 style={styles.statValue}>{totalShares}</h2>
-                </div>
-
-                <div style={styles.statBox}>
-                  <p style={styles.statLabel}>TOTAL P&L</p>
-                  <h2 style={{ ...styles.statValue, color: totalPnL >= 0 ? "#66ffb4" : "#ff6b6b" }}>
-                    {totalPnL >= 0 ? "+" : ""}{formatCurrency(totalPnL)}
-                  </h2>
-                </div>
-              </div>
-
-              <button style={styles.primaryButton} onClick={fetchDashboardData}>
-                REFRESH DASHBOARD
-              </button>
-            </div>
-
-            <div style={styles.panel}>
-              <h3 style={styles.panelHeading}>CURRENT HOLDINGS</h3>
 
               <div style={styles.tableWrap}>
                 <table style={styles.table}>
                   <thead>
                     <tr>
-                      <th style={styles.th}>STOCK NAME</th>
-                      <th style={styles.th}>QUANTITY</th>
+                      <th style={styles.th}>STOCK</th>
+                      <th style={styles.th}>QTY</th>
                       <th style={styles.th}>AVG PRICE</th>
-                      <th style={styles.th}>CURRENT PRICE</th>
-                      <th style={styles.th}>TOTAL VALUE</th>
+                      <th style={styles.th}>MARKET</th>
+                      <th style={styles.th}>VALUE</th>
                       <th style={styles.th}>P&L</th>
                     </tr>
                   </thead>
@@ -261,7 +200,7 @@ function Dashboard() {
                             <td style={styles.td}>{formatCurrency(avgPrice)}</td>
                             <td style={styles.td}>{formatCurrency(holding.currentPrice)}</td>
                             <td style={styles.td}>{formatCurrency(holding.totalValue)}</td>
-                            <td style={{ ...styles.td, color: pnl >= 0 ? "#66ffb4" : "#ff6b6b", fontWeight: 700 }}>
+                            <td style={{ ...styles.td, color: pnl >= 0 ? "#4ade80" : "#ef4444" }}>
                               {pnl >= 0 ? "+" : ""}{formatCurrency(pnl)}
                             </td>
                           </tr>
@@ -270,7 +209,7 @@ function Dashboard() {
                     ) : (
                       <tr>
                         <td style={styles.emptyCell} colSpan="6">
-                          NO HOLDINGS AVAILABLE
+                          NO ACTIVE HOLDINGS
                         </td>
                       </tr>
                     )}
@@ -279,8 +218,9 @@ function Dashboard() {
               </div>
             </div>
 
+            {/* Order Book */}
             <div style={styles.panel}>
-              <h3 style={styles.panelHeading}>MY ORDER BOOK</h3>
+              <h3 style={styles.panelHeading}>ORDER BOOK</h3>
               
               <div className="order-book-grid-layout" style={styles.orderBookGrid}>
                 <div style={styles.orderSection}>
@@ -342,9 +282,48 @@ function Dashboard() {
             </div>
           </div>
 
+          {/* Right Column */}
           <div style={styles.rightColumn}>
+            
+            {/* Market Pulse */}
             <div style={styles.panel}>
-              <h3 style={styles.panelHeading}>PROFILE SNAPSHOT</h3>
+              <h3 style={styles.panelHeading}>MARKET PULSE</h3>
+
+              <div style={styles.tableWrap}>
+                <table style={styles.table}>
+                  <thead>
+                    <tr>
+                      <th style={styles.th}>STOCK</th>
+                      <th style={styles.th}>PRICE</th>
+                      <th style={styles.th}>MIN BID</th>
+                      <th style={styles.th}>MAX BID</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {stocks.length > 0 ? (
+                      stocks.map((stock) => (
+                        <tr key={stock.id} style={styles.tr}>
+                          <td style={styles.td}>{stock.name}</td>
+                          <td style={styles.td}>{formatCurrency(stock.price)}</td>
+                          <td style={styles.tdBidMin}>₹{getMinBid(stock.price)}</td>
+                          <td style={styles.tdBidMax}>₹{getMaxBid(stock.price)}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td style={styles.emptyCell} colSpan="4">
+                          MARKET CLOSED
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Profile Snapshot */}
+            <div style={styles.panel}>
+              <h3 style={styles.panelHeading}>IDENTITY MODULE</h3>
 
               <div style={styles.infoStack}>
                 <div style={styles.infoCard}>
@@ -364,66 +343,6 @@ function Dashboard() {
               </div>
             </div>
 
-            <div style={styles.panel}>
-              <h3 style={styles.panelHeading}>MARKET OVERVIEW</h3>
-
-              <div style={styles.tableWrap}>
-                <table style={styles.table}>
-                  <thead>
-                    <tr>
-                      <th style={styles.th}>STOCK NAME</th>
-                      <th style={styles.th}>PRICE</th>
-                      <th style={styles.thBid}>MIN BID</th>
-                      <th style={styles.thBid}>MAX BID</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {stocks.length > 0 ? (
-                      stocks.map((stock) => (
-                        <tr key={stock.id} style={styles.tr}>
-                          <td style={styles.td}>{stock.name}</td>
-                          <td style={styles.td}>{formatCurrency(stock.price)}</td>
-                          <td style={styles.tdBidMin}>₹{getMinBid(stock.price)}</td>
-                          <td style={styles.tdBidMax}>₹{getMaxBid(stock.price)}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td style={styles.emptyCell} colSpan="4">
-                          NO STOCKS AVAILABLE
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div style={styles.panel}>
-              <h3 style={styles.panelHeading}>PORTFOLIO SUMMARY</h3>
-
-              <div style={styles.summaryBox}>
-                <div style={styles.summaryRow}>
-                  <span style={styles.summaryLabel}>Available Balance</span>
-                  <span style={styles.summaryValue}>{formatCurrency(user?.balance)}</span>
-                </div>
-
-                <div style={styles.summaryRow}>
-                  <span style={styles.summaryLabel}>Portfolio Worth</span>
-                  <span style={styles.summaryValue}>{formatCurrency(portfolioValue)}</span>
-                </div>
-
-                <div style={styles.summaryRow}>
-                  <span style={styles.summaryLabel}>Number of Holdings</span>
-                  <span style={styles.summaryValue}>{totalHoldings}</span>
-                </div>
-
-                <div style={styles.summaryRow}>
-                  <span style={styles.summaryLabel}>Total Shares Owned</span>
-                  <span style={styles.summaryValue}>{totalShares}</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -436,43 +355,10 @@ const styles = {
     minHeight: "100vh",
     position: "relative",
     overflow: "hidden",
-    background:
-      "radial-gradient(circle at top left, rgba(17, 71, 48, 0.25), transparent 30%), linear-gradient(135deg, #020504 0%, #010202 45%, #000000 100%)",
+    background: "#050706",
     padding: "32px 24px 50px 24px",
-    fontFamily: "Inter, Arial, sans-serif",
+    fontFamily: "'Inter', 'SF Pro Display', -apple-system, sans-serif",
     color: "#ffffff",
-  },
-
-  backgroundGlowOne: {
-    position: "absolute",
-    top: "-120px",
-    left: "-120px",
-    width: "420px",
-    height: "420px",
-    background: "radial-gradient(circle, rgba(35, 255, 157, 0.12), transparent 70%)",
-    filter: "blur(30px)",
-    pointerEvents: "none",
-  },
-
-  backgroundGlowTwo: {
-    position: "absolute",
-    right: "-120px",
-    bottom: "-120px",
-    width: "380px",
-    height: "380px",
-    background: "radial-gradient(circle, rgba(0, 255, 170, 0.08), transparent 70%)",
-    filter: "blur(30px)",
-    pointerEvents: "none",
-  },
-
-  gridOverlay: {
-    position: "absolute",
-    inset: 0,
-    backgroundImage:
-      "linear-gradient(rgba(0,255,120,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,120,0.03) 1px, transparent 1px)",
-    backgroundSize: "64px 64px",
-    opacity: 0.25,
-    pointerEvents: "none",
   },
 
   container: {
@@ -482,341 +368,231 @@ const styles = {
     margin: "0 auto",
   },
 
-  topBrandBlock: {
-    textAlign: "center",
-    marginBottom: "42px",
-  },
-
-  brandTopText: {
-    margin: 0,
-    color: "#38d996",
-    letterSpacing: "8px",
-    fontSize: "14px",
-    fontWeight: 700,
-    textTransform: "uppercase",
+  topNav: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "40px",
+    paddingBottom: "20px",
+    borderBottom: "1px solid rgba(255,255,255,0.05)",
   },
 
   brandMain: {
-    margin: "18px 0 12px 0",
-    fontSize: "82px",
-    lineHeight: 1,
-    fontWeight: 800,
-    letterSpacing: "-2px",
-    color: "transparent",
-    backgroundImage:
-      "linear-gradient(115deg, #f7f7f7 0%, #f7f7f7 32%, #72ffbf 45%, #ffffff 52%, #72ffbf 58%, #f7f7f7 72%, #f7f7f7 100%)",
-    backgroundSize: "220% auto",
-    backgroundClip: "text",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    animation: "mockStockGlimmer 4.2s linear infinite, mockStockPulse 3.2s ease-in-out infinite",
-  },
-
-  brandLine: {
-    width: "120px",
-    height: "2px",
-    margin: "0 auto",
-    background: "linear-gradient(90deg, transparent, rgba(68,255,170,0.85), transparent)",
-  },
-
-  heroRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    gap: "20px",
-    flexWrap: "wrap",
-    marginBottom: "34px",
-  },
-
-  heroTitle: {
     margin: 0,
-    fontSize: "38px",
-    lineHeight: 1.1,
-    fontWeight: 700,
-    color: "#f4f4f4",
-    letterSpacing: "-0.5px",
-  },
-
-  heroSubtitle: {
-    margin: "8px 0 0 2px",
-    fontSize: "13px",
-    letterSpacing: "2px",
-    color: "rgba(255,255,255,0.58)",
+    fontSize: "24px",
+    fontWeight: 900,
+    letterSpacing: "0.2em",
+    color: "#4ade80",
+    fontStyle: "italic",
     textTransform: "uppercase",
   },
 
-  statusWrap: {
+  navRight: {
     display: "flex",
-    gap: "18px",
-    flexWrap: "wrap",
+    alignItems: "center",
+    gap: "24px",
   },
 
   statusCard: {
-    minWidth: "150px",
-    background: "rgba(8, 12, 10, 0.7)",
-    border: "1px solid rgba(95, 255, 175, 0.12)",
-    borderRadius: "22px",
-    padding: "18px 24px",
-    boxShadow: "0 10px 40px rgba(0,0,0,0.35)",
-    backdropFilter: "blur(10px)",
-  },
-
-  statusLabel: {
-    margin: 0,
-    fontSize: "13px",
-    letterSpacing: "4px",
-    color: "rgba(255,255,255,0.46)",
-    textTransform: "uppercase",
-  },
-
-  statusValue: {
-    margin: "12px 0 0 0",
-    fontSize: "20px",
-    fontWeight: 700,
-    color: "#f5fff8",
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "12px",
+    padding: "8px 16px",
+    background: "rgba(14, 17, 17, 0.6)",
+    border: "1px solid rgba(74, 222, 128, 0.15)",
+    borderRadius: "12px",
   },
 
   liveDot: {
-    width: "9px",
-    height: "9px",
+    width: "8px",
+    height: "8px",
     borderRadius: "50%",
-    background: "#66ffb4",
-    boxShadow: "0 0 10px rgba(102,255,180,0.95)",
-    display: "inline-block",
+    background: "#4ade80",
+    boxShadow: "0 0 12px rgba(74, 222, 128, 0.8)",
+  },
+
+  statusValue: {
+    margin: 0,
+    fontSize: "12px",
+    fontWeight: 700,
+    letterSpacing: "0.15em",
+    color: "#f5fff8",
+  },
+
+  logoutBtn: {
+    background: "transparent",
+    border: "1px solid rgba(239, 68, 68, 0.3)",
+    borderRadius: "8px",
+    padding: "8px 16px",
+    color: "#ef4444",
+    fontSize: "11px",
+    fontWeight: 700,
+    letterSpacing: "0.15em",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    textTransform: "uppercase",
+  },
+
+  statGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(4, 1fr)",
+    gap: "24px",
+    marginBottom: "32px",
+  },
+
+  statBox: {
+    background: "rgba(14, 17, 17, 0.7)",
+    border: "1px solid rgba(255,255,255,0.05)",
+    borderRadius: "16px",
+    padding: "24px",
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px",
+  },
+
+  statLabel: {
+    margin: 0,
+    fontSize: "11px",
+    color: "rgba(255,255,255,0.4)",
+    letterSpacing: "0.15em",
+    textTransform: "uppercase",
+    fontWeight: 600,
+  },
+
+  statValue: {
+    margin: 0,
+    fontSize: "28px",
+    lineHeight: 1.2,
+    color: "#ffffff",
+    fontWeight: 800,
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
   },
 
   mainGrid: {
     display: "grid",
-    gridTemplateColumns: "1.3fr 0.9fr",
-    gap: "28px",
+    gridTemplateColumns: "1.8fr 1fr",
+    gap: "32px",
     alignItems: "start",
   },
 
   leftColumn: {
     display: "flex",
     flexDirection: "column",
-    gap: "28px",
+    gap: "32px",
   },
 
   rightColumn: {
     display: "flex",
     flexDirection: "column",
-    gap: "28px",
+    gap: "32px",
   },
 
   panel: {
-    background: "linear-gradient(180deg, rgba(7,10,9,0.92), rgba(5,7,6,0.88))",
-    border: "1px solid rgba(76, 255, 154, 0.10)",
-    borderRadius: "28px",
-    padding: "28px",
-    boxShadow: "0 18px 50px rgba(0,0,0,0.42)",
-    backdropFilter: "blur(12px)",
+    background: "rgba(14, 17, 17, 0.5)",
+    border: "1px solid rgba(255,255,255,0.04)",
+    borderRadius: "20px",
+    padding: "24px",
   },
 
   panelHeaderRow: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: "16px",
-    marginBottom: "22px",
-    flexWrap: "wrap",
+    marginBottom: "20px",
   },
 
   panelHeading: {
     margin: 0,
-    fontSize: "18px",
-    letterSpacing: "4px",
-    color: "rgba(255,255,255,0.58)",
+    fontSize: "14px",
+    letterSpacing: "0.15em",
+    color: "rgba(255,255,255,0.7)",
     textTransform: "uppercase",
     fontWeight: 700,
-  },
-
-  badge: {
-    border: "1px solid rgba(91,255,170,0.28)",
-    color: "#62ffb4",
-    padding: "9px 16px",
-    borderRadius: "12px",
-    fontSize: "12px",
-    letterSpacing: "2px",
-    fontWeight: 700,
-    textTransform: "uppercase",
-    background: "rgba(13, 33, 23, 0.55)",
-  },
-
-  statGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-    gap: "18px",
-    marginBottom: "22px",
-  },
-
-  statBox: {
-    background: "linear-gradient(180deg, rgba(13,18,16,0.95), rgba(7,10,9,0.92))",
-    border: "1px solid rgba(90,255,175,0.08)",
-    borderRadius: "20px",
-    padding: "22px",
-  },
-
-  statLabel: {
-    margin: 0,
-    fontSize: "12px",
-    color: "rgba(255,255,255,0.5)",
-    letterSpacing: "2px",
-    textTransform: "uppercase",
-  },
-
-  statValue: {
-    margin: "14px 0 0 0",
-    fontSize: "34px",
-    lineHeight: 1.1,
-    color: "#f6fff9",
-    fontWeight: 800,
-  },
-
-  primaryButton: {
-    width: "100%",
-    padding: "18px 22px",
-    borderRadius: "18px",
-    border: "1px solid rgba(110,255,188,0.18)",
-    background: "linear-gradient(90deg, #64e9b4, #118c57)",
-    color: "#03140d",
-    fontSize: "18px",
-    fontWeight: 800,
-    letterSpacing: "2px",
-    cursor: "pointer",
-    textTransform: "uppercase",
-    boxShadow: "0 10px 28px rgba(24, 214, 129, 0.25)",
   },
 
   tableWrap: {
     overflowX: "auto",
-    marginTop: "18px",
   },
 
   table: {
     width: "100%",
-    borderCollapse: "collapse",
+    borderCollapse: "separate",
+    borderSpacing: "0 8px",
   },
 
   th: {
     textAlign: "left",
-    padding: "15px 16px",
-    color: "rgba(255,255,255,0.55)",
-    fontSize: "12px",
+    padding: "0 16px 12px",
+    color: "rgba(255,255,255,0.4)",
+    fontSize: "10px",
     fontWeight: 700,
-    letterSpacing: "2px",
+    letterSpacing: "0.15em",
     textTransform: "uppercase",
-    borderBottom: "1px solid rgba(255,255,255,0.08)",
   },
 
   tr: {
-    borderBottom: "1px solid rgba(255,255,255,0.05)",
+    background: "rgba(255,255,255,0.02)",
   },
 
   td: {
-    padding: "17px 16px",
-    color: "#f5fff9",
-    fontSize: "15px",
-  },
-
-  thBid: {
-    textAlign: "center",
-    padding: "15px 16px",
-    color: "rgba(255,255,255,0.55)",
-    fontSize: "12px",
-    fontWeight: 700,
-    letterSpacing: "2px",
-    textTransform: "uppercase",
-    borderBottom: "1px solid rgba(255,255,255,0.08)",
+    padding: "16px",
+    color: "#ffffff",
+    fontSize: "13px",
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
   },
 
   tdBidMin: {
-    padding: "17px 16px",
-    color: "#ff8a8a",
-    fontSize: "14px",
-    fontWeight: 700,
-    textAlign: "center",
-    background: "rgba(255, 80, 80, 0.06)",
-    borderRadius: "8px",
+    padding: "16px",
+    color: "#ef4444",
+    fontSize: "13px",
+    fontWeight: 600,
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
   },
 
   tdBidMax: {
-    padding: "17px 16px",
-    color: "#7dffb8",
-    fontSize: "14px",
-    fontWeight: 700,
-    textAlign: "center",
-    background: "rgba(80, 255, 150, 0.06)",
-    borderRadius: "8px",
+    padding: "16px",
+    color: "#4ade80",
+    fontSize: "13px",
+    fontWeight: 600,
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
   },
 
   emptyCell: {
     padding: "24px",
     textAlign: "center",
-    color: "rgba(255,255,255,0.46)",
-    fontSize: "14px",
-    letterSpacing: "1px",
+    color: "rgba(255,255,255,0.3)",
+    fontSize: "12px",
+    letterSpacing: "0.1em",
   },
 
   infoStack: {
     display: "flex",
     flexDirection: "column",
-    gap: "14px",
-    marginTop: "18px",
+    gap: "12px",
   },
 
   infoCard: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "18px 18px",
-    borderRadius: "18px",
-    border: "1px solid rgba(86,255,172,0.08)",
-    background: "rgba(10, 14, 12, 0.88)",
-    gap: "14px",
+    padding: "16px",
+    borderRadius: "12px",
+    background: "rgba(255,255,255,0.03)",
   },
 
   infoTitle: {
-    fontSize: "12px",
-    color: "rgba(255,255,255,0.48)",
-    letterSpacing: "2px",
+    fontSize: "11px",
+    color: "rgba(255,255,255,0.4)",
+    letterSpacing: "0.15em",
     textTransform: "uppercase",
+    fontWeight: 600,
   },
 
   infoText: {
-    fontSize: "16px",
-    color: "#f3fff7",
-    fontWeight: 700,
-  },
-
-  summaryBox: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "16px",
-    marginTop: "18px",
-  },
-
-  summaryRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "16px",
-    padding: "16px 0",
-    borderBottom: "1px solid rgba(255,255,255,0.06)",
-  },
-
-  summaryLabel: {
-    color: "rgba(255,255,255,0.58)",
-    fontSize: "15px",
-  },
-
-  summaryValue: {
-    color: "#eafff2",
-    fontSize: "17px",
-    fontWeight: 700,
+    fontSize: "13px",
+    color: "#ffffff",
+    fontWeight: 600,
+    fontFamily: "'JetBrains Mono', 'SF Mono', monospace",
   },
 
   loadingWrap: {
@@ -824,61 +600,34 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    position: "relative",
-    zIndex: 2,
-  },
-
-  loadingCard: {
-    background: "rgba(8, 12, 10, 0.82)",
-    border: "1px solid rgba(95,255,175,0.12)",
-    padding: "28px 36px",
-    borderRadius: "22px",
-    boxShadow: "0 14px 40px rgba(0,0,0,0.35)",
+    background: "#050706",
   },
 
   loadingText: {
-    color: "#e7fff0",
-    letterSpacing: "3px",
+    color: "#4ade80",
+    letterSpacing: "0.2em",
     fontWeight: 700,
     fontSize: "14px",
-  },
-
-  logoutBtn: {
-    minWidth: "150px",
-    background: "rgba(239, 68, 68, 0.1)",
-    border: "1px solid rgba(239, 68, 68, 0.3)",
-    borderRadius: "22px",
-    padding: "18px 24px",
-    color: "#ff6b6b",
-    fontSize: "14px",
-    fontWeight: 800,
-    letterSpacing: "2px",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    backdropFilter: "blur(10px)",
     textTransform: "uppercase",
   },
 
   orderBookGrid: {
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: "24px",
-    marginTop: "14px",
+    gap: "16px",
   },
 
   orderSection: {
-    background: "rgba(0,0,0,0.2)",
-    padding: "18px",
-    borderRadius: "18px",
-    border: "1px solid rgba(255,255,255,0.05)",
+    background: "transparent",
   },
 
   orderSubheading: {
-    margin: "0 0 14px 0",
-    fontSize: "12px",
-    color: "rgba(255,255,255,0.4)",
-    letterSpacing: "1px",
-    fontWeight: 700,
+    margin: "0 0 12px 0",
+    fontSize: "11px",
+    color: "rgba(255,255,255,0.5)",
+    letterSpacing: "0.1em",
+    fontWeight: 600,
+    textTransform: "uppercase",
   },
 };
 

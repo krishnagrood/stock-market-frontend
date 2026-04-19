@@ -42,7 +42,7 @@ function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
-    navigate("/login");
+    navigate("/");
   };
 
   const portfolioValue = useMemo(() => {

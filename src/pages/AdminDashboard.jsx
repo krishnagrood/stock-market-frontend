@@ -125,25 +125,31 @@ function AdminDashboard() {
     }
   };
 
-  const masterReset = async () => {
-    const confirmMessage = "⚠️ CRITICAL: MASTER RESET\n\nThis will permanently DELETE all:\n- Stocks\n- Pending Orders\n- User Holdings\n\nAll User balances will be reset to ₹5,00,000.\n\nARE YOU ABSOLUTELY SURE?";
-    if (!window.confirm(confirmMessage)) return;
+  const masterReset = async (e) => {
+    if (e) e.preventDefault();
+    console.log("Master Reset Triggered");
+    
+    const msg = "MASTER RESET WARNING:\n\n1. All Stocks will be deleted\n2. All Orders will be cleared\n3. All User Holdings will be wiped\n4. All Balances reset to 500,000\n\nProceed with Reset?";
+    
+    if (!window.confirm(msg)) return;
 
     try {
       const res = await axios.post(`${API_BASE}/admin/masterReset`);
       if (res.data.success) {
-        alert("✅ " + res.data.message);
-        fetchStocks();
-        fetchUsers();
-        fetchOrders();
-        fetchPreviewPrices();
+        alert("Success: " + res.data.message);
+        await Promise.all([
+          fetchStocks(),
+          fetchUsers(),
+          fetchOrders(),
+          fetchPreviewPrices()
+        ]);
         setTradingOpen(false);
       } else {
-        alert(res.data.message || "Reset failed");
+        alert("Reset failed: " + (res.data.message || "Unknown error"));
       }
     } catch (err) {
-      console.error(err);
-      alert("Master Reset failed");
+      console.error("Master Reset Error:", err);
+      alert("Error: Could not complete Master Reset");
     }
   };
 
@@ -172,28 +178,29 @@ function AdminDashboard() {
     }
   };
 
-  const addStock = async () => {
+  const addStock = async (e) => {
+    if (e) e.preventDefault();
     if (!newStock.name || !newStock.price) {
-      alert("Fill all stock fields");
+      alert("Please fill both Stock Name and Price");
       return;
     }
 
     try {
       const res = await axios.post(`${API_BASE}/admin/addStock`, {
-        name: newStock.name,
+        name: newStock.name.trim(),
         price: Number(newStock.price)
       });
 
       if (res.data.success) {
-        alert("Stock added!");
+        alert("Stock added successfully!");
         setNewStock({ name: "", price: "" });
         fetchStocks();
       } else {
-        alert(res.data.message || "Failed to add stock");
+        alert("Error: " + (res.data.message || "Failed to add stock"));
       }
     } catch (err) {
-      console.error(err);
-      alert("Failed to add stock");
+      console.error("Add Stock Error:", err);
+      alert("Critical Error: Failed to connect to server");
     }
   };
 
@@ -611,7 +618,7 @@ function AdminDashboard() {
                 <button style={styles.darkBtn} onClick={stopTrading}>
                   Stop
                 </button>
-                <button style={styles.masterResetBtn} onClick={masterReset}>
+                <button style={styles.masterResetBtn} onClick={(e) => masterReset(e)}>
                   ⚠️ MASTER RESET
                 </button>
               </div>
@@ -708,7 +715,7 @@ function AdminDashboard() {
                 </div>
 
                 <div style={styles.addStockButtonWrap}>
-                  <button style={styles.softGreenBtn} onClick={addStock}>
+                  <button style={styles.softGreenBtn} onClick={(e) => addStock(e)}>
                     Register
                   </button>
                 </div>

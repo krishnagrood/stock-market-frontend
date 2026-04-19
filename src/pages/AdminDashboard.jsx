@@ -38,7 +38,7 @@ function AdminDashboard() {
   const [approvingPrices, setApprovingPrices] = useState(false);
   const [allocating, setAllocating] = useState(false);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://stock-market-backend-production-bf5f.up.railway.app/api";
 
   useEffect(() => {
     fetchStocks();

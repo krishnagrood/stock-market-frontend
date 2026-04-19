@@ -11,7 +11,7 @@ function Login() {
 
   const login = async () => {
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://stock-market-backend-production-bf5f.up.railway.app/api";
       const response = await axios.post(`${API_BASE}/login`, {
         username,
         password,

@@ -126,8 +126,8 @@ function AdminDashboard() {
   };
 
   const masterReset = async () => {
-    if (!window.confirm("⚠️ MASTER RESET: This will DELETE all stocks, orders, holdings and reset ALL user balances to ₹5,00,000. Are you sure?")) return;
-    if (!window.confirm("🔴 FINAL CONFIRMATION: This action CANNOT be undone. Proceed?")) return;
+    const confirmMessage = "⚠️ CRITICAL: MASTER RESET\n\nThis will permanently DELETE all:\n- Stocks\n- Pending Orders\n- User Holdings\n\nAll User balances will be reset to ₹5,00,000.\n\nARE YOU ABSOLUTELY SURE?";
+    if (!window.confirm(confirmMessage)) return;
 
     try {
       const res = await axios.post(`${API_BASE}/admin/masterReset`);

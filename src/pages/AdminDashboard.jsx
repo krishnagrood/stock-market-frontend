@@ -32,6 +32,14 @@ function AdminDashboard() {
     quantity: ""
   });
 
+  const [userForm, setUserForm] = useState({
+    username: "",
+    password: "",
+    balance: "500000"
+  });
+
+  const [creatingUser, setCreatingUser] = useState(false);
+
   const [orders, setOrders] = useState([]);
   const [previewPrices, setPreviewPrices] = useState([]);
   const [processingOrders, setProcessingOrders] = useState(false);
@@ -223,6 +231,59 @@ function AdminDashboard() {
       alert("Delete failed");
     }
   };
+
+  const createUser = async (e) => {
+    if (e) e.preventDefault();
+    const { username, password, balance } = userForm;
+
+    if (!username || !password) {
+      alert("Username and Password are required");
+      return;
+    }
+
+    try {
+      setCreatingUser(true);
+      const res = await axios.post(`${API_BASE}/admin/createUser`, {
+        username: username.trim(),
+        password: password.trim(),
+        balance: Number(balance)
+      });
+
+      if (res.data.success) {
+        alert(res.data.message);
+        setUserForm({ username: "", password: "", balance: "500000" });
+        fetchUsers();
+      } else {
+        alert("Error: " + (res.data.message || "Failed to create user"));
+      }
+    } catch (err) {
+      console.error("Create User Error:", err);
+      alert("Failed to create user account");
+    } finally {
+      setCreatingUser(false);
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    if (!window.confirm("Permanently DELETE this user account?")) return;
+
+    try {
+      const res = await axios.delete(`${API_BASE}/admin/deleteUser`, {
+        params: { userId }
+      });
+
+      if (res.data.success) {
+        alert("User deleted!");
+        fetchUsers();
+      } else {
+        alert(res.data.message || "Delete failed");
+      }
+    } catch (err) {
+      console.error("Delete User Error:", err);
+      alert("Failed to delete user");
+    }
+  };
+
 
   const allocateStockToUser = async () => {
     const { userId, stockId, quantity } = allocationForm;
@@ -685,6 +746,85 @@ function AdminDashboard() {
           </div>
 
           <div style={styles.rightCol}>
+            <section style={styles.panel}>
+              <h3 style={styles.sectionTitle}>User Registry</h3>
+
+              <div style={{ marginBottom: "26px" }}>
+                <p style={styles.fieldLabel}>Create New Account</p>
+                <div style={styles.addStockGrid}>
+                  <div style={styles.fieldBlock}>
+                    <input
+                      style={styles.input}
+                      placeholder="Username"
+                      value={userForm.username}
+                      onChange={(e) =>
+                        setUserForm({ ...userForm, username: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div style={styles.fieldBlock}>
+                    <input
+                      style={styles.input}
+                      type="password"
+                      placeholder="Password"
+                      value={userForm.password}
+                      onChange={(e) =>
+                        setUserForm({ ...userForm, password: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div style={styles.fieldBlock}>
+                    <input
+                      style={styles.inputMono}
+                      type="number"
+                      placeholder="Initial Balance"
+                      value={userForm.balance}
+                      onChange={(e) =>
+                        setUserForm({ ...userForm, balance: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div style={styles.addStockButtonWrap}>
+                    <button
+                      style={styles.softGreenBtn}
+                      onClick={(e) => createUser(e)}
+                      disabled={creatingUser}
+                    >
+                      {creatingUser ? "..." : "Create"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div style={styles.headerLine} />
+
+              <div style={{ marginTop: "26px" }}>
+                <p style={styles.fieldLabel}>Active Users</p>
+                {users.length === 0 ? (
+                  <p style={styles.emptyText}>No users registered</p>
+                ) : (
+                  <div style={{ display: "grid", gap: "10px" }}>
+                    {users.map((u) => (
+                      <div key={u.id} style={styles.userListItem}>
+                        <div style={{ flex: 1 }}>
+                          <span style={styles.userListUsername}>{u.username}</span>
+                          <span style={styles.userListMeta}>
+                            ID: {u.id} • ₹{Number(u.balance).toLocaleString()}
+                          </span>
+                        </div>
+                        <button
+                          style={styles.miniDeleteBtn}
+                          onClick={() => deleteUser(u.id)}
+                        >
+                          DELETE
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </section>
+
             <section style={styles.panel}>
               <h3 style={styles.sectionTitle}>Add New Stock</h3>
 
@@ -1417,6 +1557,48 @@ const styles = {
     textTransform: "uppercase",
     letterSpacing: "0.22em",
     color: "#8a938c"
+  },
+
+  userListItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "12px 16px",
+    background: "rgba(255,255,255,0.02)",
+    border: "1px solid rgba(255,255,255,0.05)",
+    borderRadius: "12px",
+    transition: "all 0.2s ease"
+  },
+
+  userListUsername: {
+    display: "block",
+    fontSize: "13px",
+    fontWeight: 700,
+    color: "#e2e8f0",
+    letterSpacing: "0.02em"
+  },
+
+  userListMeta: {
+    fontSize: "10px",
+    color: "rgba(148, 163, 184, 0.6)",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    marginTop: "2px",
+    display: "block"
+  },
+
+  miniDeleteBtn: {
+    padding: "6px 10px",
+    background: "rgba(239, 68, 68, 0.1)",
+    color: "#ef4444",
+    border: "1px solid rgba(239, 68, 68, 0.2)",
+    borderRadius: "8px",
+    fontSize: "9px",
+    fontWeight: 800,
+    cursor: "pointer",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    transition: "all 0.2s ease"
   },
 
   sectionTitleWithBorder: {

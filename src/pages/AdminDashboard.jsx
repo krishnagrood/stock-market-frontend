@@ -48,14 +48,7 @@ function AdminDashboard() {
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://stock-market-backend-production-bf5f.up.railway.app/api";
 
-  useEffect(() => {
-    fetchStocks();
-    fetchUsers();
-    fetchTradingStatus();
-    fetchOrders();
-    fetchPreviewPrices();
-  }, []);
-
+  
   const handleLogout = () => {
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
@@ -111,6 +104,16 @@ function AdminDashboard() {
     }
   };
 
+  useEffect(() => {
+    fetchStocks();
+    fetchUsers();
+    fetchTradingStatus();
+    fetchOrders();
+    fetchPreviewPrices();
+  }, []);
+
+  const addStock = async () => { alert("Not implemented"); };
+  const createUser = async () => { alert("Not implemented"); };
   const startTrading = async () => {
     try {
       await axios.post(`${API_BASE}/admin/start`);
@@ -267,6 +270,8 @@ function AdminDashboard() {
 
   const addOrder = async () => {
     const {
+      buyerTeam,
+      sellerTeam,
       buyerUsername,
       sellerUsername,
       stockName,
@@ -381,9 +386,6 @@ function AdminDashboard() {
       setApprovingPrices(false);
     }
   };
-
-  const orderValue =
-    Number(orderForm.price || 0) * Number(orderForm.quantity || 0);
 
   return (
     <div className="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">

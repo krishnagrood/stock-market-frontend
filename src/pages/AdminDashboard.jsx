@@ -112,8 +112,61 @@ function AdminDashboard() {
     fetchPreviewPrices();
   }, []);
 
-  const addStock = async () => { alert("Not implemented"); };
-  const createUser = async () => { alert("Not implemented"); };
+  const addStock = async () => {
+    const { name, price } = newStock;
+    if (!name || !price) {
+      alert("Please fill all stock fields");
+      return;
+    }
+
+    try {
+      const res = await axios.post(`${API_BASE}/admin/addStock`, {
+        name: name.trim().toUpperCase(),
+        price: Number(price)
+      });
+
+      if (res.data.success) {
+        alert("Stock added successfully ✅");
+        setNewStock({ name: "", price: "" });
+        fetchStocks();
+      } else {
+        alert(res.data.message || "Failed to add stock");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Error adding stock");
+    }
+  };
+
+  const createUser = async () => {
+    const { username, password, balance } = userForm;
+    if (!username || !password || !balance) {
+      alert("Please fill all user fields");
+      return;
+    }
+
+    try {
+      setCreatingUser(true);
+      const res = await axios.post(`${API_BASE}/admin/createUser`, {
+        username: username.trim(),
+        password: password.trim(),
+        balance: Number(balance)
+      });
+
+      if (res.data.success) {
+        alert(res.data.message || "User created successfully ✅");
+        setUserForm({ username: "", password: "", balance: "500000" });
+        fetchUsers();
+      } else {
+        alert(res.data.message || "Failed to create user");
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || "Error creating user");
+    } finally {
+      setCreatingUser(false);
+    }
+  };
   const startTrading = async () => {
     try {
       await axios.post(`${API_BASE}/admin/start`);

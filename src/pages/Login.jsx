@@ -206,9 +206,9 @@ function Login() {
           }}
         >
           <img
-            src="https://matyas-mattanelli.github.io/portfolio/assets/img/projects/180-degrees/180dc-logo.png"
-            alt="180DC Logo"
-            className="relative z-10 h-16 w-auto object-contain drop-shadow-[0_0_24px_rgba(108,179,62,0.88)] md:h-28"
+            src={logo}
+            alt="MockStock Logo"
+            className="relative z-10 h-16 w-auto object-contain drop-shadow-[0_0_24px_rgba(34,197,94,0.88)] md:h-28"
             style={{
               animation: "logoFloat 6s ease-in-out infinite",
             }}
@@ -235,11 +235,11 @@ function Login() {
           <div className="mx-auto mb-4 h-16 w-40 rounded-full bg-green-500/10 blur-2xl md:h-24 md:w-80 md:blur-3xl" />
 
           <h1
-            className="relative -mt-10 text-3xl font-montserrat font-black uppercase sm:text-5xl md:-mt-16 md:text-7xl"
+            className="relative -mt-10 text-3xl font-black uppercase sm:text-5xl md:-mt-16 md:text-7xl"
             style={{
               letterSpacing: "0.11em",
               backgroundImage:
-                "linear-gradient(115deg, #ffffff 16%, #f7fff9 28%, #bbf7d0 40%, #6CB33E 52%, #31A343 60%, #d9fbe4 72%, #ffffff 86%)",
+                "linear-gradient(115deg, #ffffff 16%, #f7fff9 28%, #bbf7d0 40%, #4ade80 52%, #22c55e 60%, #d9fbe4 72%, #ffffff 86%)",
               backgroundSize: "220% auto",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
@@ -247,7 +247,7 @@ function Login() {
                 "titleGlow 3.2s ease-in-out infinite alternate, shimmerSweep 6.2s linear infinite",
             }}
           >
-            180DC MLNCE
+            MARKET ODYSSEY
           </h1>
 
           <p className="mt-3 text-[10px] uppercase tracking-[0.3em] text-green-400/90 md:text-xs md:tracking-[0.45em]">
@@ -316,7 +316,7 @@ function Login() {
                 className="relative h-[56px] w-full overflow-hidden rounded-[18px] font-extrabold tracking-[0.05em] text-black transition duration-300 hover:-translate-y-[1px] hover:shadow-[0_14px_34px_rgba(34,197,94,0.3)] active:translate-y-0"
                 style={{
                   background:
-                    "linear-gradient(180deg, #8cf5ae 0%, #6CB33E 44%, #22c55e 100%)",
+                    "linear-gradient(180deg, #8cf5ae 0%, #4ade80 44%, #22c55e 100%)",
                   boxShadow:
                     "0 14px 34px rgba(34,197,94,0.18), inset 0 1px 0 rgba(255,255,255,0.34)",
                 }}
@@ -360,7 +360,7 @@ function Login() {
       </main>
 
       <footer className="relative z-10 px-6 pb-6 pt-4 text-center text-[11px] tracking-[0.08em] text-gray-600">
-        © 2026 180DC MLNCE • ALL RIGHTS RESERVED
+        © 2026 MARKET ODYSSEY • ALL RIGHTS RESERVED
       </footer>
     </div>
   );

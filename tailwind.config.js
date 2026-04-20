@@ -43,7 +43,7 @@ export default {
         "on-tertiary": "#690006",
         "background": "#111413",
         "on-error-container": "#ffdad6",
-        "primary": "#6CB33E",
+        "primary": "#6bfb9a",
         "secondary-fixed": "#e1e3e1",
         "on-secondary-container": "#b3b6b4",
         "surface": "#111413",
@@ -65,8 +65,7 @@ export default {
       fontFamily: {
         "headline": ["Space Grotesk"],
         "body": ["Inter"],
-        "label": ["Inter"],
-        "montserrat": ["Montserrat"]
+        "label": ["Inter"]
       }
     },
   },

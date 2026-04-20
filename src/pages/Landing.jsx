@@ -3,11 +3,11 @@ import { useEffect, useState, useRef } from "react";
 import kineticBull from "../assets/kinetic_bull.png";
 
 const TICKERS = [
-  { label: "BTC/USD", value: "+5.24%", color: "#6CB33E", top: "22%", left: "8%" },
-  { label: "ETH/USD", value: "+2.1%", color: "#6CB33E", top: "26%", right: "6%" },
+  { label: "BTC/USD", value: "+5.24%", color: "#4ade80", top: "22%", left: "8%" },
+  { label: "ETH/USD", value: "+2.1%", color: "#4ade80", top: "26%", right: "6%" },
   { label: "SPX500", value: "-1.12%", color: "#ef4444", top: "52%", right: "5%" },
   { label: "NDX", value: "-0.8%", color: "#ef4444", top: "58%", left: "7%" },
-  { label: "GOLD", value: "+0.43%", color: "#6CB33E", top: "42%", left: "3%" },
+  { label: "GOLD", value: "+0.43%", color: "#4ade80", top: "42%", left: "3%" },
 ];
 
 function Landing() {
@@ -103,8 +103,8 @@ function Landing() {
           50% { opacity: 1; }
         }
         @keyframes kineticGlow {
-          0%, 100% { box-shadow: 0 0 40px rgba(108, 179, 62, 0.15), 0 0 80px rgba(108, 179, 62, 0.08); }
-          50% { box-shadow: 0 0 60px rgba(108, 179, 62, 0.3), 0 0 120px rgba(108, 179, 62, 0.15); }
+          0%, 100% { box-shadow: 0 0 40px rgba(78,222,163,0.15), 0 0 80px rgba(78,222,163,0.08); }
+          50% { box-shadow: 0 0 60px rgba(78,222,163,0.3), 0 0 120px rgba(78,222,163,0.15); }
         }
         @keyframes tickerSlide {
           0% { opacity: 0; transform: translateX(-20px); }
@@ -127,13 +127,13 @@ function Landing() {
           100% { opacity: 1; transform: translateY(0); }
         }
         .kinetic-cta:hover {
-          background: #6CB33E !important;
+          background: #4ade80 !important;
           color: #050706 !important;
-          box-shadow: 0 0 40px rgba(108, 179, 62, 0.5), 0 0 80px rgba(108, 179, 62, 0.2) !important;
+          box-shadow: 0 0 40px rgba(78,222,163,0.5), 0 0 80px rgba(78,222,163,0.2) !important;
           transform: translateY(-2px) !important;
         }
         .kinetic-nav-link:hover {
-          color: #6CB33E !important;
+          color: #4ade80 !important;
         }
         .kinetic-footer-link:hover {
           color: #ccc !important;
@@ -179,7 +179,7 @@ function Landing() {
         ...styles.nav,
         animation: visible ? "navFade 0.8s ease-out both" : "none",
       }}>
-        <div style={styles.navBrand}>180DC MLNCE</div>
+        <div style={styles.navBrand}>MARKET ODYSSEY</div>
         <div style={styles.navLinks}>
           <span className="kinetic-nav-link" style={styles.navLink}>MARKETS</span>
           <span className="kinetic-nav-link" style={styles.navLink}>TERMINALS</span>
@@ -249,7 +249,7 @@ function Landing() {
       {/* Footer */}
       <footer style={styles.footer}>
         <span style={styles.footerCopyright}>
-          © 2026 180DC MLNCE. HIGH-FREQUENCY CONSULTING ENGINE.
+          © 2026 MARKET ODYSSEY. HIGH-FREQUENCY DECISION ENGINE.
         </span>
         <div style={styles.footerLinks}>
           <span className="kinetic-footer-link" style={styles.footerLink}>LEGAL AUTHORITY</span>
@@ -323,7 +323,7 @@ const styles = {
     left: 0,
     width: "100%",
     height: "2px",
-    background: "linear-gradient(90deg, transparent, rgba(108, 179, 62, 0.15), transparent)",
+    background: "linear-gradient(90deg, transparent, rgba(78,222,163,0.15), transparent)",
     animation: "scanLine 4s linear infinite",
     zIndex: 2,
     pointerEvents: "none",
@@ -337,7 +337,7 @@ const styles = {
     fontWeight: 600,
     letterSpacing: "0.08em",
     background: "rgba(0,0,0,0.5)",
-    border: "1px solid rgba(108, 179, 62, 0.15)",
+    border: "1px solid rgba(78,222,163,0.15)",
     borderRadius: "6px",
     padding: "6px 14px",
     backdropFilter: "blur(10px)",
@@ -364,7 +364,7 @@ const styles = {
     fontSize: "16px",
     fontWeight: 900,
     letterSpacing: "0.2em",
-    color: "#6CB33E",
+    color: "#4ade80",
     fontStyle: "italic",
   },
   navLinks: {
@@ -395,9 +395,9 @@ const styles = {
     padding: "8px 16px",
   },
   navExecuteBtn: {
-    background: "rgba(108, 179, 62, 0.12)",
-    border: "1px solid rgba(108, 179, 62, 0.4)",
-    color: "#6CB33E",
+    background: "rgba(78,222,163,0.12)",
+    border: "1px solid rgba(78,222,163,0.4)",
+    color: "#4ade80",
     fontSize: "11px",
     fontWeight: 800,
     letterSpacing: "0.15em",
@@ -426,8 +426,8 @@ const styles = {
     textShadow: "0 0 60px rgba(255,255,255,0.08)",
   },
   heroAccent: {
-    color: "#6CB33E",
-    textShadow: "0 0 80px rgba(108, 179, 62, 0.4), 0 0 160px rgba(108, 179, 62, 0.15)",
+    color: "#4ade80",
+    textShadow: "0 0 80px rgba(78,222,163,0.4), 0 0 160px rgba(78,222,163,0.15)",
   },
   heroSubtitle: {
     fontSize: "16px",
@@ -439,9 +439,9 @@ const styles = {
   },
   heroCta: {
     marginTop: "12px",
-    background: "rgba(108, 179, 62, 0.08)",
-    border: "1px solid rgba(108, 179, 62, 0.35)",
-    color: "#6CB33E",
+    background: "rgba(78,222,163,0.08)",
+    border: "1px solid rgba(78,222,163,0.35)",
+    color: "#4ade80",
     fontSize: "13px",
     fontWeight: 800,
     letterSpacing: "0.2em",
@@ -484,7 +484,7 @@ const styles = {
   statValueGreen: {
     fontSize: "20px",
     fontWeight: 800,
-    color: "#6CB33E",
+    color: "#4ade80",
     letterSpacing: "-0.01em",
   },
   statDivider: {

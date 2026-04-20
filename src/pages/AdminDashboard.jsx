@@ -386,1648 +386,268 @@ function AdminDashboard() {
     Number(orderForm.price || 0) * Number(orderForm.quantity || 0);
 
   return (
-    <div style={styles.page}>
-      <style>
-        {`
-          @keyframes glowPulse {
-            0% {
-              filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.12))
-                      drop-shadow(0 0 24px rgba(34, 197, 94, 0.05));
-            }
-            100% {
-              filter: drop-shadow(0 0 24px rgba(34, 197, 94, 0.34))
-                      drop-shadow(0 0 56px rgba(34, 197, 94, 0.14));
-            }
-          }
-
-          @keyframes shimmerSweep {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-          }
-
-          @keyframes panelGlow {
-            0% {
-              box-shadow:
-                0 16px 36px -14px rgba(0, 0, 0, 0.56),
-                0 0 24px -6px rgba(78, 222, 163, 0.03);
-            }
-            100% {
-              box-shadow:
-                0 24px 56px -14px rgba(0, 0, 0, 0.72),
-                0 0 34px -6px rgba(78, 222, 163, 0.07);
-            }
-          }
-
-          @keyframes bgFloatOne {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(18px, -16px) scale(1.04); }
-            100% { transform: translate(0, 0) scale(1); }
-          }
-
-          @keyframes bgFloatTwo {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(-14px, 18px) scale(1.05); }
-            100% { transform: translate(0, 0) scale(1); }
-          }
-
-          * {
-            box-sizing: border-box;
-          }
-
-          html, body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            background: #080808;
-          }
-
-          input::placeholder,
-          select {
-            color: #6b7280;
-          }
-
-          input::-webkit-outer-spin-button,
-          input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-          }
-
-          ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-          }
-
-          ::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-          }
-
-          ::-webkit-scrollbar-thumb {
-            background: rgba(78, 222, 163, 0.22);
-            border-radius: 10px;
-          }
-
-          @media (min-width: 1024px) {
-            .admin-main-grid {
-              grid-template-columns: 0.92fr 1.08fr;
-            }
-
-            .top-bar-layout {
-              align-items: end;
-            }
-
-            .add-stock-grid-layout {
-              grid-template-columns: 2fr 2fr 1fr;
-            }
-
-            .order-grid-layout {
-              grid-template-columns: repeat(4, minmax(0, 1fr));
-            }
-
-            .allocation-grid-layout {
-              grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-
-            .stocks-grid-layout {
-              grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-          }
-
-          @media (max-width: 1023px) {
-            .admin-main-grid {
-              grid-template-columns: 1fr;
-            }
-
-            .top-bar-layout {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-
-            .add-stock-grid-layout {
-              grid-template-columns: 1fr;
-            }
-
-            .order-grid-layout {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .allocation-grid-layout {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .stocks-grid-layout {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-          }
-
-          @media (max-width: 700px) {
-            .order-grid-layout,
-            .allocation-grid-layout {
-              grid-template-columns: 1fr;
-            }
-
-            .stocks-grid-layout {
-              grid-template-columns: 1fr;
-            }
-
-            .order-summary-layout {
-              flex-direction: column;
-              align-items: flex-start;
-            }
-
-            .top-stats-layout {
-              width: 100%;
-              justify-content: space-between;
-            }
-          }
-        `}
-      </style>
-
-      <div style={styles.gridOverlay} />
-      <div style={styles.bgGlowOne} />
-      <div style={styles.bgGlowTwo} />
-      <div style={styles.bgGlowThree} />
-
-      <header className="admin-header" style={styles.header}>
-        <div style={styles.headerInner}>
-          <div style={styles.headerLine} />
+    <div className="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
+      <div className="scanline-overlay"></div>
+      
+      {/* SideNavBar */}
+      <aside className="flex flex-col fixed left-0 top-0 h-full py-8 bg-[#191c1b] docked left-0 h-screen w-64 border-r border-[#6bfb9a]/5 z-50 hidden lg:flex">
+        <div className="px-6 mb-10">
+          <h1 className="text-[#4ade80] font-black italic text-2xl tracking-tighter">Kinetic Admin</h1>
+          <p className="text-[#e2e3e0]/40 font-['Inter'] text-[10px] uppercase tracking-[0.2em] mt-1">Command Center</p>
         </div>
-      </header>
-
-      <style>
-        {`
-          @media (max-width: 768px) {
-            .admin-main-grid {
-              grid-template-columns: 1fr !important;
-            }
-            .top-bar-layout {
-              flex-direction: column !important;
-              align-items: flex-start !important;
-              gap: 20px !important;
-              margin-bottom: 30px !important;
-            }
-            .top-stats-layout {
-              width: 100% !important;
-              flex-wrap: wrap !important;
-            }
-            .top-stats-layout > div {
-              flex: 1 !important;
-              min-width: 120px !important;
-            }
-            .header-title-text {
-              font-size: 2.5rem !important;
-            }
-            .admin-header {
-              padding-top: 20px !important;
-              padding-bottom: 20px !important;
-            }
-            .admin-main {
-              padding: 0 16px 60px !important;
-            }
-            .panel-layout {
-              padding: 15px !important;
-              overflow: hidden;
-            }
-            .order-grid-layout {
-               grid-template-columns: 1fr !important;
-            }
-            .allocation-grid-layout {
-               grid-template-columns: 1fr !important;
-            }
-            .stocks-grid-layout {
-               grid-template-columns: 1fr !important;
-            }
-          }
-
-          @keyframes panelGlow {
-            0% { box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.56), 0 0 24px -6px rgba(78, 222, 163, 0.03); }
-            100% { box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.64), 0 0 32px -4px rgba(78, 222, 163, 0.06); }
-          }
-          @keyframes glowPulse {
-            0% { filter: drop-shadow(0 0 12px rgba(78, 222, 163, 0.1)); }
-            100% { filter: drop-shadow(0 0 24px rgba(78, 222, 163, 0.3)); }
-          }
-          @keyframes bgFloatOne {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(20px, -20px); }
-            100% { transform: translate(0, 0); }
-          }
-          @keyframes bgFloatTwo {
-            0% { transform: translate(0, 0); }
-            50% { transform: translate(-30px, 15px); }
-            100% { transform: translate(0, 0); }
-          }
-          @keyframes shimmerSweep {
-            0% { background-position: 220% auto; }
-            100% { background-position: -220% auto; }
-          }
-        `}
-      </style>
-
-
-      <main className="admin-main" style={styles.main}>
-        <div className="top-bar-layout" style={styles.topBar}>
-          <div>
-            <h2 style={styles.dashboardTitle}>MARKET ODYSSEY</h2>
-            <p style={styles.dashboardSubTitle}>Administrator Terminal</p>
-          </div>
-
-          <div className="top-stats-layout" style={styles.topRightStats}>
-            <div style={styles.statCard}>
-              <p style={styles.statLabel}>Market</p>
-              <p style={styles.statValue}>
-                {tradingOpen ? "OPEN" : "CLOSED"}
-              </p>
-            </div>
-
-            <div style={styles.statCard}>
-              <p style={styles.statLabel}>Status</p>
-              <div style={styles.statusRow}>
-                <span
-                  style={{
-                    ...styles.statusDot,
-                    background: tradingOpen ? "#4edea3" : "#ef4444"
-                  }}
-                />
-                <p style={styles.statValue}>{tradingOpen ? "LIVE" : "IDLE"}</p>
-              </div>
-            </div>
-
-            <button style={styles.logoutBtn} onClick={handleLogout}>
-              LOGOUT
-            </button>
-          </div>
+        <nav className="flex-1 px-3 space-y-1">
+          <a className="flex items-center gap-3 px-4 py-3 bg-[#6bfb9a]/10 text-[#6bfb9a] border-r-4 border-[#6bfb9a] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
+            <span className="material-symbols-outlined text-lg" data-icon="admin_panel_settings">admin_panel_settings</span>
+            <span>Controls</span>
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 text-[#e2e3e0]/40 hover:bg-[#1d201f] hover:text-[#e2e3e0] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
+            <span className="material-symbols-outlined text-lg" data-icon="group">group</span>
+            <span>Users</span>
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 text-[#e2e3e0]/40 hover:bg-[#1d201f] hover:text-[#e2e3e0] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
+            <span className="material-symbols-outlined text-lg" data-icon="storefront">storefront</span>
+            <span>Markets</span>
+          </a>
+        </nav>
+        <div className="px-6 mt-auto">
+          <button onClick={handleLogout} className="w-full py-3 bg-error/20 text-error font-bold rounded-lg scale-95 active:opacity-80 transition-all flex items-center justify-center gap-2 hover:bg-error/30">
+            LOGOUT
+          </button>
         </div>
+      </aside>
 
-        <div className="admin-main-grid" style={styles.mainGrid}>
-          <div style={styles.leftCol}>
-            <section className="panel-layout" style={styles.panel}>
-              <div style={styles.panelHead}>
-                <h3 style={styles.panelTitle}>Market Control</h3>
-                <span style={styles.miniBadge}>Operational</span>
-              </div>
-
-              <div style={styles.verticalButtonGroup}>
-                <button style={styles.greenBtn} onClick={startTrading}>
-                  Start
-                </button>
-                <button style={styles.darkBtn} onClick={stopTrading}>
-                  Stop
-                </button>
-                <button style={styles.masterResetBtn} onClick={(e) => masterReset(e)}>
-                  ⚠️ MASTER RESET
-                </button>
-              </div>
-            </section>
-
-            <section className="panel-layout" style={styles.panel}>
-              <div style={styles.panelHead}>
-                <h3 style={styles.panelTitle}>Market Preview</h3>
-              </div>
-
-              {previewPrices.length === 0 ? (
-                <p style={styles.emptyText}>No preview generated</p>
-              ) : (
-                <>
-                  <div style={styles.tableWrap}>
-                    <table style={styles.previewTable}>
-                      <thead>
-                        <tr>
-                          <th style={styles.smallTh}>Ticker</th>
-                          <th style={{ ...styles.smallTh, textAlign: "right" }}>
-                            Reference
-                          </th>
-                          <th style={{ ...styles.smallTh, textAlign: "right" }}>
-                            Target
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {previewPrices.map((item) => (
-                          <tr key={item.id} style={styles.previewRow}>
-                            <td style={styles.smallTd}>{item.stockName}</td>
-                            <td style={{ ...styles.smallTd, textAlign: "right" }}>
-                              ₹{item.oldPrice}
-                            </td>
-                            <td
-                              style={{
-                                ...styles.smallTd,
-                                textAlign: "right",
-                                color:
-                                  item.newPrice > item.oldPrice
-                                    ? "#4edea3"
-                                    : "#ff6b6b",
-                                fontWeight: 700
-                              }}
-                            >
-                              ₹{item.newPrice}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <button
-                    style={styles.outlineGreenBtn}
-                    onClick={approvePrices}
-                    disabled={approvingPrices}
-                  >
-                    {approvingPrices ? "Approving..." : "Commit Price Vector"}
-                  </button>
-                </>
-              )}
-            </section>
+      <main className="lg:ml-64 min-h-screen pb-12">
+        {/* TopNavBar */}
+        <header className="flex justify-between items-center w-full px-6 h-16 bg-[#111413]/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-[#6bfb9a]/10 shadow-[0_4px_24px_rgba(0,0,0,0.5)] z-40">
+          <div className="flex items-center gap-8">
+            <div className="text-xl font-bold tracking-tighter text-[#4ade80] font-['Space_Grotesk']">Market Odyssey</div>
+            <div className="hidden md:flex items-center gap-6">
+              <span className="text-[#6bfb9a] border-b-2 border-[#6bfb9a] pb-1 font-['Space_Grotesk'] tracking-tight">Admin Terminal</span>
+            </div>
           </div>
+          <div className="flex items-center gap-4">
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${tradingOpen ? 'bg-primary/20' : 'bg-error/20'}`}>
+              <div className={`w-2 h-2 rounded-full animate-pulse ${tradingOpen ? 'bg-primary shadow-[0_0_8px_#6bfb9a]' : 'bg-error shadow-[0_0_8px_#ffb4ab]'}`}></div>
+              <span className={`text-[10px] font-bold tracking-widest font-label ${tradingOpen ? 'text-primary' : 'text-error'}`}>
+                {tradingOpen ? 'MARKET LIVE' : 'MARKET CLOSED'}
+              </span>
+            </div>
+            <button onClick={handleLogout} className="lg:hidden material-symbols-outlined text-[#e2e3e0]/60 hover:bg-error/20 hover:text-error p-2 rounded-lg transition-all" data-icon="logout">logout</button>
+          </div>
+        </header>
 
-          <div style={styles.rightCol}>
-            <section className="panel-layout" style={styles.panel}>
-              <h3 style={styles.sectionTitle}>User Registry</h3>
-
-              <div style={{ marginBottom: "26px" }}>
-                <p style={styles.fieldLabel}>Create New Account</p>
-                <div className="add-stock-grid-layout" style={styles.addStockGrid}>
-                  <div style={styles.fieldBlock}>
-                    <input
-                      style={styles.input}
-                      placeholder="Username"
-                      value={userForm.username}
-                      onChange={(e) =>
-                        setUserForm({ ...userForm, username: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div style={styles.fieldBlock}>
-                    <input
-                      style={styles.input}
-                      type="password"
-                      placeholder="Password"
-                      value={userForm.password}
-                      onChange={(e) =>
-                        setUserForm({ ...userForm, password: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div style={styles.fieldBlock}>
-                    <input
-                      style={styles.inputMono}
-                      type="number"
-                      placeholder="Initial Balance"
-                      value={userForm.balance}
-                      onChange={(e) =>
-                        setUserForm({ ...userForm, balance: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div style={styles.addStockButtonWrap}>
-                    <button
-                      style={styles.softGreenBtn}
-                      onClick={(e) => createUser(e)}
-                      disabled={creatingUser}
-                    >
-                      {creatingUser ? "..." : "Create"}
-                    </button>
-                  </div>
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-12 gap-6">
+            
+            {/* Left Column: Orders, Previews, Controls */}
+            <div className="col-span-12 xl:col-span-7 space-y-6">
+              
+              {/* Market Control Panel */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10 glass-panel">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="font-headline font-bold uppercase tracking-wider text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary">settings_power</span>
+                    Market Control
+                  </h3>
                 </div>
-              </div>
-
-              <div style={styles.headerLine} />
-
-              <div style={{ marginTop: "26px" }}>
-                <p style={styles.fieldLabel}>Active Users</p>
-                {users.length === 0 ? (
-                  <p style={styles.emptyText}>No users registered</p>
-                ) : (
-                  <div style={{ display: "grid", gap: "10px" }}>
-                    {users.map((u) => (
-                      <div key={u.id} style={styles.userListItem}>
-                        <div style={{ flex: 1 }}>
-                          <span style={styles.userListUsername}>{u.username}</span>
-                          <span style={styles.userListMeta}>
-                            ID: {u.id} • ₹{Number(u.balance).toLocaleString()}
-                          </span>
-                        </div>
-                        <button
-                          style={styles.miniDeleteBtn}
-                          onClick={() => deleteUser(u.id)}
-                        >
-                          DELETE
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </section>
-
-            <section className="panel-layout" style={styles.panel}>
-              <h3 style={styles.sectionTitle}>Add New Stock</h3>
-
-                <div className="add-stock-grid-layout" style={styles.addStockGrid}>
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Stock Name</label>
-                  <input
-                    style={styles.input}
-                    placeholder="e.g. GOLD.X"
-                    value={newStock.name}
-                    onChange={(e) =>
-                      setNewStock({ ...newStock, name: e.target.value })
-                    }
-                  />
+                <div className="flex flex-wrap gap-4">
+                  <button onClick={startTrading} className="flex-1 py-3 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded transition-all">Start Trading</button>
+                  <button onClick={stopTrading} className="flex-1 py-3 bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface text-[10px] font-bold uppercase tracking-widest rounded transition-all">Stop Trading</button>
+                  <button onClick={masterReset} className="flex-1 py-3 bg-error/20 hover:bg-error/30 border border-error/30 text-error text-[10px] font-bold uppercase tracking-widest rounded transition-all">Master Reset</button>
                 </div>
+              </section>
 
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Price</label>
-                  <input
-                    style={styles.inputMono}
-                    type="number"
-                    placeholder="0.00"
-                    value={newStock.price}
-                    onChange={(e) =>
-                      setNewStock({ ...newStock, price: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div style={styles.addStockButtonWrap}>
-                  <button style={styles.softGreenBtn} onClick={(e) => addStock(e)}>
-                    Register
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            <section className="panel-layout" style={styles.panel}>
-              <h3 style={styles.sectionTitle}>Allocate Stock To User</h3>
-
-                <div className="allocation-grid-layout" style={styles.allocationGrid}>
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Select User</label>
-                  <select
-                    style={styles.selectSmall}
-                    value={allocationForm.userId}
-                    onChange={(e) =>
-                      setAllocationForm({
-                        ...allocationForm,
-                        userId: e.target.value
-                      })
-                    }
-                  >
-                    <option value="">Select User</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {user.username} (ID: {user.id}) - ₹
-                        {Number(user.balance).toFixed(2)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Select Stock</label>
-                  <select
-                    style={styles.selectSmall}
-                    value={allocationForm.stockId}
-                    onChange={(e) =>
-                      setAllocationForm({
-                        ...allocationForm,
-                        stockId: e.target.value
-                      })
-                    }
-                  >
-                    <option value="">Select Stock</option>
-                    {stocks.map((stock) => (
-                      <option key={stock.id} value={stock.id}>
-                        {stock.name} - ₹{Number(stock.price).toFixed(2)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Quantity</label>
-                  <input
-                    style={styles.inputSmallMono}
-                    type="number"
-                    placeholder="Enter quantity"
-                    value={allocationForm.quantity}
-                    onChange={(e) =>
-                      setAllocationForm({
-                        ...allocationForm,
-                        quantity: e.target.value
-                      })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginTop: "18px" }}>
-                <button
-                  style={styles.softGreenBtn}
-                  onClick={allocateStockToUser}
-                  disabled={allocating}
-                >
-                  {allocating ? "Allocating..." : "Allocate Stock"}
-                </button>
-              </div>
-            </section>
-
-            <section style={{ ...styles.panel, overflow: "hidden" }}>
-              <h3 style={styles.sectionTitleWithBorder}>Admin Order Terminal</h3>
-
-                <div className="order-grid-layout" style={styles.orderGrid}>
-
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Buyer Username</label>
-                  <select
-                    style={styles.selectSmall}
-                    value={orderForm.buyerUsername}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, buyerUsername: e.target.value })
-                    }
-                  >
-                    <option value="">Select Buyer</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.username}>
-                        {user.username}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Seller Username</label>
-                  <select
-                    style={styles.selectSmall}
-                    value={orderForm.sellerUsername}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, sellerUsername: e.target.value })
-                    }
-                  >
-                    <option value="">Select Seller</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.username}>
-                        {user.username}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Ticker</label>
-                  <select
-                    style={styles.selectSmall}
-                    value={orderForm.stockName}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, stockName: e.target.value })
-                    }
-                  >
-                    <option value="">Select Stock</option>
-                    {stocks.map((stock) => (
-                      <option key={stock.id} value={stock.name}>
-                        {stock.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Valuation</label>
-                  <input
-                    style={styles.inputSmallMono}
-                    type="number"
-                    placeholder="Trade Price"
-                    value={orderForm.price}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, price: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div style={styles.fieldBlock}>
-                  <label style={styles.fieldLabel}>Quantity</label>
-                  <input
-                    style={styles.inputSmallMono}
-                    type="number"
-                    placeholder="Quantity"
-                    value={orderForm.quantity}
-                    onChange={(e) =>
-                      setOrderForm({ ...orderForm, quantity: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="order-summary-layout" style={styles.orderSummaryPanel}>
-                <div style={styles.orderSummaryLeft}>
+              {/* Admin Order Terminal */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+                <h3 className="font-headline font-bold uppercase tracking-wider text-sm mb-4">Admin Order Terminal</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p style={styles.orderSummaryLabel}>Projected Volume</p>
-                    <p style={styles.orderSummaryValue}>₹ {orderValue.toFixed(2)}</p>
+                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Buyer Username</label>
+                    <input className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Buyer" value={orderForm.buyerUsername} onChange={e => setOrderForm({...orderForm, buyerUsername: e.target.value})} />
                   </div>
-
-                  <div
-                    style={{
-                      ...styles.warningBox,
-                      color: orderValue > 50000 ? "#ff8b8b" : "#9ca3af",
-                      borderColor:
-                        orderValue > 50000
-                          ? "rgba(255, 107, 107, 0.12)"
-                          : "rgba(255,255,255,0.06)",
-                      background:
-                        orderValue > 50000
-                          ? "rgba(255, 107, 107, 0.05)"
-                          : "rgba(255,255,255,0.03)"
-                    }}
-                  >
-                    <span>
-                      {orderValue > 50000
-                        ? "Threshold variance detected"
-                        : "Within execution threshold"}
-                    </span>
+                  <div>
+                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Seller Username</label>
+                    <input className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Seller" value={orderForm.sellerUsername} onChange={e => setOrderForm({...orderForm, sellerUsername: e.target.value})} />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Select Stock</label>
+                    <select className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" value={orderForm.stockName} onChange={e => setOrderForm({...orderForm, stockName: e.target.value})}>
+                      <option value="">Select Stock</option>
+                      {stocks.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Quantity</label>
+                    <input type="number" className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Qty" value={orderForm.quantity} onChange={e => setOrderForm({...orderForm, quantity: e.target.value})} />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Price</label>
+                    <input type="number" className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Price" value={orderForm.price} onChange={e => setOrderForm({...orderForm, price: e.target.value})} />
+                  </div>
+                  <div className="flex items-end">
+                    <button onClick={addOrder} className="w-full py-2.5 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded transition-all">Submit Order</button>
                   </div>
                 </div>
+              </section>
 
-                <button style={styles.greenBtnWide} onClick={addOrder}>
-                  Authorize Order
-                </button>
-              </div>
-            </section>
-          </div>
-
-          <section style={{ ...styles.panel, gridColumn: "1 / -1" }}>
-            <div style={styles.panelHead}>
-              <h3 style={styles.panelTitle}>Queued Operations</h3>
-              <button
-                style={styles.linkBtn}
-                onClick={processOrders}
-                disabled={processingOrders}
-              >
-                {processingOrders ? "Processing..." : "Processing Queue →"}
-              </button>
-            </div>
-
-            {orders.length === 0 ? (
-              <p style={styles.emptyText}>No pending orders</p>
-            ) : (
-              <div style={styles.tableWrap}>
-                <table style={styles.queueTable}>
-                  <thead>
-                    <tr>
-                      <th style={styles.queueTh}>Buyer</th>
-                      <th style={styles.queueTh}>Seller</th>
-                      <th style={styles.queueTh}>Ticker</th>
-                      <th style={{ ...styles.queueTh, textAlign: "right" }}>
-                        Price
-                      </th>
-                      <th style={{ ...styles.queueTh, textAlign: "right" }}>
-                        Volume
-                      </th>
-                      <th style={{ ...styles.queueTh, textAlign: "right" }}>
-                        Net Value
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((order) => (
-                      <tr key={order.id} style={styles.queueRow}>
-                        <td style={styles.queueTd}>
-                          {order.buyerUsername || "-"}
-                        </td>
-                        <td style={styles.queueTd}>
-                          {order.sellerUsername || "-"}
-                        </td>
-                        <td style={styles.queueTickerTd}>{order.stockName}</td>
-                        <td style={{ ...styles.queueTd, textAlign: "right" }}>
-                          ₹{order.price}
-                        </td>
-                        <td style={{ ...styles.queueTd, textAlign: "right" }}>
-                          {order.quantity}
-                        </td>
-                        <td style={styles.queueValueTd}>₹{order.orderValue}</td>
+              {/* Queued Operations */}
+              <section className="bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/10">
+                <div className="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-highest/20">
+                  <h3 className="font-headline font-bold uppercase tracking-wider text-sm">Queued Operations</h3>
+                  <button onClick={processOrders} disabled={processingOrders} className="px-3 py-1 bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest rounded hover:bg-primary-fixed transition-all">{processingOrders ? 'Processing...' : 'Generate Preview'}</button>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                      <tr className="text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container/50">
+                        <th className="px-6 py-3 font-bold">B</th>
+                        <th className="px-6 py-3 font-bold">S</th>
+                        <th className="px-6 py-3 font-bold">Asset</th>
+                        <th className="px-6 py-3 font-bold">Qty</th>
+                        <th className="px-6 py-3 font-bold">Price</th>
+                        <th className="px-6 py-3 font-bold">Status</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </section>
-
-          <section style={{ ...styles.panel, gridColumn: "1 / -1" }}>
-            <h3 style={styles.sectionTitle}>Stocks</h3>
-
-              <div className="stocks-grid-layout" style={styles.stocksGrid}>
-              {stocks.map((s) => (
-                <div key={s.id} style={styles.stockCard}>
-                  <div style={styles.stockCardTop}>
-                    <div>
-                      <h4 style={styles.stockName}>{s.name}</h4>
-                    </div>
-                    <div style={styles.stockPriceBlock}>
-                      <p style={styles.stockPriceLabel}>Mark Price</p>
-                      <p style={styles.stockPrice}>₹{s.price}</p>
-                    </div>
-                  </div>
-
-                  <div style={styles.stockCardActions}>
-                    <div style={{ flex: 1 }}>
-                      <input
-                        style={styles.stockInput}
-                        type="number"
-                        placeholder="Adj. Price"
-                        onChange={(e) =>
-                          setPrice({
-                            ...price,
-                            [s.id]: Number(e.target.value)
-                          })
-                        }
-                      />
-                    </div>
-
-                    <button
-                      style={styles.softGreenBtnCompact}
-                      disabled={loadingId === s.id}
-                      onClick={() => updatePrice(s.id)}
-                    >
-                      {loadingId === s.id ? "Updating..." : "Update"}
-                    </button>
-
-                    <button
-                      style={styles.deleteIconBtn}
-                      onClick={() => deleteStock(s.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
+                    </thead>
+                    <tbody className="text-sm font-mono divide-y divide-outline-variant/5">
+                      {orders.map(o => (
+                        <tr key={o.id} className="hover:bg-surface-container-high/40 transition-colors">
+                          <td className="px-6 py-3 text-primary">{o.buyerUsername}</td>
+                          <td className="px-6 py-3 text-error">{o.sellerUsername}</td>
+                          <td className="px-6 py-3 text-on-surface font-bold">{o.stockName}</td>
+                          <td className="px-6 py-3 text-on-surface-variant">{o.quantity}</td>
+                          <td className="px-6 py-3 text-on-surface-variant">₹{o.price}</td>
+                          <td className="px-6 py-3"><span className="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[8px]">{o.status}</span></td>
+                        </tr>
+                      ))}
+                      {orders.length === 0 && <tr><td colSpan="6" className="px-6 py-6 text-center text-on-surface-variant text-xs">No pending orders</td></tr>}
+                    </tbody>
+                  </table>
                 </div>
-              ))}
+              </section>
+
+              {/* Market Preview */}
+              <section className="bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/10">
+                <div className="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-highest/20">
+                  <h3 className="font-headline font-bold uppercase tracking-wider text-sm">Market Preview</h3>
+                  {previewPrices.length > 0 && <button onClick={approvePrices} disabled={approvingPrices} className="px-3 py-1 bg-primary text-on-primary text-[10px] font-bold uppercase tracking-widest rounded hover:bg-primary-fixed transition-all">{approvingPrices ? 'Approving...' : 'Commit Price Vector'}</button>}
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container/50">
+                        <th className="px-6 py-3 font-bold">Ticker</th>
+                        <th className="px-6 py-3 font-bold text-right">Reference</th>
+                        <th className="px-6 py-3 font-bold text-right">Target</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-sm font-mono divide-y divide-outline-variant/5">
+                      {previewPrices.map(item => (
+                        <tr key={item.id} className="hover:bg-surface-container-high/40 transition-colors">
+                          <td className="px-6 py-3 text-on-surface font-bold">{item.stockName}</td>
+                          <td className="px-6 py-3 text-on-surface-variant text-right">₹{item.oldPrice}</td>
+                          <td className={`px-6 py-3 text-right font-bold ${item.newPrice > item.oldPrice ? 'text-primary' : 'text-error'}`}>₹{item.newPrice}</td>
+                        </tr>
+                      ))}
+                      {previewPrices.length === 0 && <tr><td colSpan="3" className="px-6 py-6 text-center text-on-surface-variant text-xs">No preview generated</td></tr>}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
             </div>
-          </section>
+
+            {/* Right Column: User & Stock Management */}
+            <div className="col-span-12 xl:col-span-5 space-y-6">
+              
+              {/* User Registry */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+                <h3 className="font-headline font-bold uppercase tracking-wider text-sm mb-4">User Registry</h3>
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <input className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Username" value={userForm.username} onChange={e => setUserForm({...userForm, username: e.target.value})} />
+                  <input type="password" className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Password" value={userForm.password} onChange={e => setUserForm({...userForm, password: e.target.value})} />
+                  <input type="number" className="col-span-2 w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Initial Balance" value={userForm.balance} onChange={e => setUserForm({...userForm, balance: e.target.value})} />
+                  <button onClick={createUser} disabled={creatingUser} className="col-span-2 py-2.5 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded transition-all">Create Account</button>
+                </div>
+                
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Active Users</h4>
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-2 no-scrollbar">
+                  {users.map(u => (
+                    <div key={u.id} className="bg-surface-container p-3 rounded flex justify-between items-center group">
+                      <div>
+                        <div className="text-sm font-bold">{u.username}</div>
+                        <div className="text-[10px] text-on-surface-variant font-mono">₹{u.balance}</div>
+                      </div>
+                      <button onClick={() => deleteUser(u.id)} className="text-error/50 hover:text-error transition-colors p-1"><span className="material-symbols-outlined text-sm">delete</span></button>
+                    </div>
+                  ))}
+                  {users.length === 0 && <div className="text-xs text-on-surface-variant text-center py-2">No users registered</div>}
+                </div>
+              </section>
+
+              {/* Add New Stock */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+                <h3 className="font-headline font-bold uppercase tracking-wider text-sm mb-4">Add New Stock</h3>
+                <div className="flex gap-4">
+                  <input className="w-1/3 bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none uppercase font-mono" placeholder="Symbol" value={newStock.name} onChange={e => setNewStock({...newStock, name: e.target.value.toUpperCase()})} />
+                  <input type="number" className="w-1/3 bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none font-mono" placeholder="Price" value={newStock.price} onChange={e => setNewStock({...newStock, price: e.target.value})} />
+                  <button onClick={addStock} className="w-1/3 py-2 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded transition-all">Initialize</button>
+                </div>
+              </section>
+
+              {/* Allocate Stock */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+                <h3 className="font-headline font-bold uppercase tracking-wider text-sm mb-4">Allocate Stock To User</h3>
+                <div className="space-y-4">
+                  <select className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" value={allocationForm.userId} onChange={e => setAllocationForm({...allocationForm, userId: e.target.value})}>
+                    <option value="">Select User</option>
+                    {users.map(u => <option key={u.id} value={u.id}>{u.username}</option>)}
+                  </select>
+                  <select className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" value={allocationForm.stockId} onChange={e => setAllocationForm({...allocationForm, stockId: e.target.value})}>
+                    <option value="">Select Stock</option>
+                    {stocks.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                  <input type="number" className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Quantity" value={allocationForm.quantity} onChange={e => setAllocationForm({...allocationForm, quantity: e.target.value})} />
+                  <button onClick={allocateStockToUser} disabled={allocating} className="w-full py-2.5 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded transition-all">{allocating ? 'Processing...' : 'Execute Transfer'}</button>
+                </div>
+              </section>
+
+              {/* Active Listings */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10">
+                <h3 className="font-headline font-bold uppercase tracking-wider text-sm mb-4">Active Listings</h3>
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-2 no-scrollbar">
+                  {stocks.map(s => (
+                    <div key={s.id} className="bg-surface-container p-3 rounded flex justify-between items-center group">
+                      <div>
+                        <div className="text-sm font-bold font-headline">{s.name}</div>
+                        <div className="text-[10px] text-primary font-mono">₹{s.price}</div>
+                      </div>
+                      <button onClick={() => deleteStock(s.id)} className="text-error/50 hover:text-error transition-colors p-1"><span className="material-symbols-outlined text-sm">delete</span></button>
+                    </div>
+                  ))}
+                  {stocks.length === 0 && <div className="text-xs text-on-surface-variant text-center py-2">No active listings</div>}
+                </div>
+              </section>
+
+            </div>
+          </div>
         </div>
       </main>
 
-      {/* CUSTOM CONFIRM MODAL */}
+      {/* Modals for Confirmation */}
       {confirmModal.isOpen && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modalContent}>
-            <div style={styles.modalHeader}>
-              <h3 style={styles.modalTitle}>Confirm Action</h3>
-            </div>
-            <div style={styles.modalBody}>
-              <p style={styles.modalMessage}>{confirmModal.message}</p>
-            </div>
-            <div style={styles.modalActions}>
-              <button style={styles.modalCancelBtn} onClick={cancelConfirm}>CANCEL</button>
-              <button style={styles.modalConfirmBtn} onClick={executeConfirm}>CONFIRM</button>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="bg-surface-container-low border border-outline-variant/20 p-6 rounded-lg max-w-sm w-full mx-4 shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+            <h3 className="text-lg font-bold font-headline text-error mb-4">Confirm Action</h3>
+            <pre className="text-sm text-on-surface whitespace-pre-wrap font-body mb-6">{confirmModal.message}</pre>
+            <div className="flex gap-4">
+              <button onClick={cancelConfirm} className="flex-1 py-2 bg-surface-container hover:bg-surface-container-high rounded text-sm transition-colors">Cancel</button>
+              <button onClick={executeConfirm} className="flex-1 py-2 bg-error/20 hover:bg-error/30 text-error rounded text-sm transition-colors font-bold">Confirm</button>
             </div>
           </div>
         </div>
       )}
-
-      <footer style={styles.footer}>
-        <p style={styles.footerText}>PROTOCOL SOVEREIGN ALPHA — SYSTEM SECURED</p>
-      </footer>
-
-      <div style={styles.bottomEdge} />
     </div>
   );
 }
-
-const panelBase = {
-  background:
-    "linear-gradient(180deg, rgba(17,17,17,0.96) 0%, rgba(10,10,10,0.92) 100%)",
-  border: "1px solid rgba(78, 222, 163, 0.06)",
-  boxShadow:
-    "0 16px 36px -14px rgba(0, 0, 0, 0.56), 0 0 24px -6px rgba(78, 222, 163, 0.03)",
-  transition: "all 0.3s ease",
-  animation: "panelGlow 4s ease-in-out infinite alternate",
-  backdropFilter: "blur(14px)",
-  WebkitBackdropFilter: "blur(14px)"
-};
-
-const inputBase = {
-  width: "100%",
-  background:
-    "linear-gradient(180deg, rgba(8,8,8,0.96) 0%, rgba(12,12,12,0.92) 100%)",
-  border: "1px solid rgba(255,255,255,0.06)",
-  borderRadius: "16px",
-  color: "#e5e2e1",
-  padding: "16px 18px",
-  fontSize: "14px",
-  outline: "none",
-  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.02)"
-};
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#080808",
-    color: "#e5e2e1",
-    fontFamily: "Inter, sans-serif",
-    position: "relative",
-    overflowX: "hidden"
-  },
-
-  gridOverlay: {
-    position: "fixed",
-    inset: 0,
-    pointerEvents: "none",
-    opacity: 0.18,
-    backgroundImage:
-      "linear-gradient(rgba(78, 222, 163, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(78, 222, 163, 0.03) 1px, transparent 1px)",
-    backgroundSize: "52px 52px"
-  },
-
-  bgGlowOne: {
-    position: "fixed",
-    top: "-12%",
-    left: "-4%",
-    width: "42%",
-    height: "42%",
-    borderRadius: "999px",
-    background: "rgba(78, 222, 163, 0.08)",
-    filter: "blur(120px)",
-    animation: "bgFloatOne 11s ease-in-out infinite",
-    pointerEvents: "none"
-  },
-
-  bgGlowTwo: {
-    position: "fixed",
-    top: "18%",
-    right: "-5%",
-    width: "32%",
-    height: "32%",
-    borderRadius: "999px",
-    background: "rgba(78, 222, 163, 0.06)",
-    filter: "blur(110px)",
-    animation: "bgFloatTwo 12s ease-in-out infinite",
-    pointerEvents: "none"
-  },
-
-  bgGlowThree: {
-    position: "fixed",
-    bottom: "-8%",
-    right: "8%",
-    width: "28%",
-    height: "28%",
-    borderRadius: "999px",
-    background: "rgba(78, 222, 163, 0.05)",
-    filter: "blur(100px)",
-    animation: "bgFloatOne 10s ease-in-out infinite reverse",
-    pointerEvents: "none"
-  },
-
-  header: {
-    paddingTop: "72px",
-    paddingBottom: "74px",
-    textAlign: "center",
-    position: "relative",
-    zIndex: 2
-  },
-
-  headerInner: {
-    display: "inline-flex",
-    flexDirection: "column",
-    alignItems: "center"
-  },
-
-  headerLabel: {
-    fontSize: "12px",
-    textTransform: "uppercase",
-    letterSpacing: "0.5em",
-    color: "rgba(78, 222, 163, 0.6)",
-    fontWeight: 600,
-    marginBottom: "14px"
-  },
-
-  headerTitle: {
-    fontSize: "clamp(2.8rem, 5vw, 4.4rem)",
-    fontWeight: 900,
-    letterSpacing: "-0.05em",
-    color: "#e5e2e1",
-    textTransform: "uppercase",
-    margin: 0,
-    backgroundImage:
-      "linear-gradient(110deg, #ffffff 20%, #dcfce7 35%, #4edea3 50%, #dcfce7 65%, #ffffff 80%)",
-    backgroundSize: "220% auto",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    animation:
-      "glowPulse 3s ease-in-out infinite alternate, shimmerSweep 6s linear infinite"
-  },
-
-  headerLine: {
-    height: "1px",
-    width: "108px",
-    marginTop: "18px",
-    background:
-      "linear-gradient(90deg, transparent 0%, rgba(78, 222, 163, 0.36) 50%, transparent 100%)"
-  },
-
-  main: {
-    maxWidth: "1320px",
-    margin: "0 auto",
-    padding: "0 24px 96px",
-    position: "relative",
-    zIndex: 2
-  },
-
-  topBar: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "32px",
-    marginBottom: "56px"
-  },
-
-  dashboardTitle: {
-    fontSize: "clamp(2rem, 3vw, 3.1rem)",
-    fontWeight: 900,
-    textTransform: "uppercase",
-    margin: 0,
-    letterSpacing: "-0.04em",
-    lineHeight: 1
-  },
-
-  dashboardSubTitle: {
-    margin: "12px 0 0 0",
-    color: "#8a938c",
-    fontSize: "14px",
-    letterSpacing: "0.08em",
-    textTransform: "uppercase"
-  },
-
-  topRightStats: {
-    display: "flex",
-    gap: "14px"
-  },
-
-  statCard: {
-    minWidth: "132px",
-    padding: "14px 16px",
-    borderRadius: "16px",
-    background: "rgba(255,255,255,0.02)",
-    border: "1px solid rgba(255,255,255,0.05)",
-    textAlign: "right"
-  },
-
-  statLabel: {
-    fontSize: "10px",
-    textTransform: "uppercase",
-    letterSpacing: "0.2em",
-    color: "#8a938c",
-    fontWeight: 700,
-    marginBottom: "6px"
-  },
-
-  statValue: {
-    margin: 0,
-    fontFamily: "monospace",
-    fontSize: "1.05rem",
-    color: "#e5e2e1",
-    textTransform: "uppercase"
-  },
-
-  statusRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    justifyContent: "flex-end"
-  },
-
-  statusDot: {
-    width: "7px",
-    height: "7px",
-    borderRadius: "999px",
-    boxShadow: "0 0 12px currentColor"
-  },
-
-  mainGrid: {
-    display: "grid",
-    gap: "24px",
-    alignItems: "start"
-  },
-
-  leftCol: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "24px"
-  },
-
-  rightCol: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "24px"
-  },
-
-  panel: {
-    ...panelBase,
-    borderRadius: "28px",
-    padding: "30px"
-  },
-
-  panelHead: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: "16px",
-    marginBottom: "24px",
-    flexWrap: "wrap"
-  },
-
-  panelTitle: {
-    margin: 0,
-    fontSize: "12px",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "0.22em",
-    color: "#8a938c"
-  },
-
-  miniBadge: {
-    padding: "5px 10px",
-    background: "rgba(78, 222, 163, 0.05)",
-    border: "1px solid rgba(78, 222, 163, 0.20)",
-    color: "#4edea3",
-    fontSize: "9px",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "0.16em",
-    borderRadius: "6px"
-  },
-
-  verticalButtonGroup: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "14px"
-  },
-
-  greenBtn: {
-    width: "100%",
-    background: "linear-gradient(135deg, #65ebb0 0%, #005f3f 100%)",
-    color: "#032816",
-    fontWeight: 900,
-    padding: "18px",
-    border: "none",
-    borderRadius: "18px",
-    fontSize: "12px",
-    textTransform: "uppercase",
-    letterSpacing: "0.2em",
-    cursor: "pointer",
-    boxShadow: "0 12px 30px rgba(78, 222, 163, 0.16)"
-  },
-
-  greenBtnWide: {
-    background: "linear-gradient(135deg, #65ebb0 0%, #005f3f 100%)",
-    color: "#032816",
-    fontWeight: 900,
-    padding: "18px 28px",
-    border: "none",
-    borderRadius: "18px",
-    fontSize: "12px",
-    textTransform: "uppercase",
-    letterSpacing: "0.14em",
-    cursor: "pointer",
-    minWidth: "220px",
-    boxShadow: "0 12px 30px rgba(78, 222, 163, 0.16)"
-  },
-
-  darkBtn: {
-    width: "100%",
-    background: "rgba(255,255,255,0.03)",
-    color: "rgba(229,226,225,0.78)",
-    fontWeight: 800,
-    padding: "18px",
-    borderRadius: "18px",
-    fontSize: "12px",
-    textTransform: "uppercase",
-    letterSpacing: "0.2em",
-    cursor: "pointer",
-    border: "1px solid rgba(255,255,255,0.05)"
-  },
-
-  masterResetBtn: {
-    width: "100%",
-    background: "linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(185, 28, 28, 0.25))",
-    color: "#ff6b6b",
-    fontWeight: 800,
-    padding: "18px",
-    borderRadius: "18px",
-    fontSize: "12px",
-    textTransform: "uppercase",
-    letterSpacing: "0.2em",
-    cursor: "pointer",
-    border: "1px solid rgba(239, 68, 68, 0.35)",
-    marginTop: "8px",
-    boxShadow: "0 4px 20px rgba(239, 68, 68, 0.15)",
-    transition: "all 0.3s ease"
-  },
-
-  outlineGreenBtn: {
-    width: "100%",
-    padding: "16px",
-    marginTop: "20px",
-    background: "transparent",
-    color: "#4edea3",
-    border: "1px solid rgba(78, 222, 163, 0.20)",
-    borderRadius: "16px",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "0.15em",
-    fontSize: "10px",
-    cursor: "pointer"
-  },
-
-  sectionTitle: {
-    margin: "0 0 26px 0",
-    fontSize: "12px",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "0.22em",
-    color: "#8a938c"
-  },
-
-  userListItem: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: "12px 16px",
-    background: "rgba(255,255,255,0.02)",
-    border: "1px solid rgba(255,255,255,0.05)",
-    borderRadius: "12px",
-    transition: "all 0.2s ease"
-  },
-
-  userListUsername: {
-    display: "block",
-    fontSize: "13px",
-    fontWeight: 700,
-    color: "#e2e8f0",
-    letterSpacing: "0.02em"
-  },
-
-  userListMeta: {
-    fontSize: "10px",
-    color: "rgba(148, 163, 184, 0.6)",
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-    marginTop: "2px",
-    display: "block"
-  },
-
-  miniDeleteBtn: {
-    padding: "6px 10px",
-    background: "rgba(239, 68, 68, 0.1)",
-    color: "#ef4444",
-    border: "1px solid rgba(239, 68, 68, 0.2)",
-    borderRadius: "8px",
-    fontSize: "9px",
-    fontWeight: 800,
-    cursor: "pointer",
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-    transition: "all 0.2s ease"
-  },
-
-  sectionTitleWithBorder: {
-    margin: "0 0 26px 0",
-    paddingLeft: "16px",
-    borderLeft: "2px solid #4edea3",
-    fontSize: "12px",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "0.22em",
-    color: "#8a938c"
-  },
-
-  addStockGrid: {
-    display: "grid",
-    gap: "18px",
-    alignItems: "end"
-  },
-
-  allocationGrid: {
-    display: "grid",
-    gap: "18px",
-    alignItems: "end"
-  },
-
-  fieldBlock: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px"
-  },
-
-  fieldLabel: {
-    fontSize: "10px",
-    textTransform: "uppercase",
-    letterSpacing: "0.18em",
-    color: "rgba(138, 147, 140, 0.7)",
-    fontWeight: 800,
-    marginLeft: "4px"
-  },
-
-  input: {
-    ...inputBase
-  },
-
-  inputMono: {
-    ...inputBase,
-    fontFamily: "monospace"
-  },
-
-  inputSmall: {
-    ...inputBase,
-    padding: "14px 16px",
-    fontSize: "12px",
-    fontWeight: 600
-  },
-
-  inputSmallMono: {
-    ...inputBase,
-    padding: "14px 16px",
-    fontSize: "12px",
-    fontFamily: "monospace"
-  },
-
-  selectSmall: {
-    ...inputBase,
-    padding: "14px 16px",
-    fontSize: "12px",
-    fontWeight: 700,
-    appearance: "none"
-  },
-
-  addStockButtonWrap: {
-    display: "flex"
-  },
-
-  softGreenBtn: {
-    width: "100%",
-    background: "rgba(78, 222, 163, 0.10)",
-    color: "#4edea3",
-    border: "1px solid rgba(78, 222, 163, 0.20)",
-    fontWeight: 800,
-    padding: "16px",
-    borderRadius: "16px",
-    fontSize: "12px",
-    textTransform: "uppercase",
-    letterSpacing: "0.15em",
-    cursor: "pointer"
-  },
-
-  softGreenBtnCompact: {
-    background: "rgba(78, 222, 163, 0.08)",
-    color: "#4edea3",
-    border: "1px solid rgba(78, 222, 163, 0.20)",
-    padding: "12px 14px",
-    borderRadius: "12px",
-    fontSize: "10px",
-    fontWeight: 800,
-    textTransform: "uppercase",
-    letterSpacing: "0.12em",
-    cursor: "pointer"
-  },
-
-  orderGrid: {
-    display: "grid",
-    gap: "18px",
-    marginBottom: "28px"
-  },
-
-  orderSummaryPanel: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "24px",
-    background: "rgba(255,255,255,0.025)",
-    padding: "26px",
-    borderRadius: "22px",
-    border: "1px solid rgba(255,255,255,0.05)",
-    flexWrap: "wrap"
-  },
-
-  orderSummaryLeft: {
-    display: "flex",
-    gap: "28px",
-    alignItems: "center",
-    flexWrap: "wrap"
-  },
-
-  orderSummaryLabel: {
-    fontSize: "10px",
-    textTransform: "uppercase",
-    color: "rgba(138, 147, 140, 0.7)",
-    letterSpacing: "0.2em",
-    fontWeight: 800,
-    marginBottom: "8px"
-  },
-
-  orderSummaryValue: {
-    fontSize: "2rem",
-    fontWeight: 900,
-    margin: 0,
-    letterSpacing: "-0.03em"
-  },
-
-  warningBox: {
-    padding: "14px 18px",
-    borderRadius: "14px",
-    fontSize: "11px",
-    fontWeight: 700,
-    border: "1px solid rgba(255,255,255,0.06)"
-  },
-
-  tableWrap: {
-    overflowX: "auto"
-  },
-
-  previewTable: {
-    width: "100%",
-    textAlign: "left",
-    borderCollapse: "collapse"
-  },
-
-  smallTh: {
-    paddingBottom: "12px",
-    fontSize: "10px",
-    textTransform: "uppercase",
-    color: "rgba(138, 147, 140, 0.5)",
-    letterSpacing: "0.15em",
-    fontWeight: 800,
-    borderBottom: "1px solid rgba(255,255,255,0.05)"
-  },
-
-  smallTd: {
-    padding: "16px 0",
-    fontSize: "12px",
-    borderBottom: "1px solid rgba(255,255,255,0.05)"
-  },
-
-  previewRow: {},
-
-  linkBtn: {
-    background: "transparent",
-    border: "none",
-    color: "#4edea3",
-    fontWeight: 800,
-    fontSize: "10px",
-    textTransform: "uppercase",
-    letterSpacing: "0.15em",
-    cursor: "pointer"
-  },
-
-  queueTable: {
-    width: "100%",
-    textAlign: "left",
-    borderCollapse: "separate",
-    borderSpacing: "0 8px",
-    minWidth: "980px"
-  },
-
-  queueTh: {
-    padding: "0 16px 16px",
-    fontSize: "9px",
-    textTransform: "uppercase",
-    color: "rgba(138, 147, 140, 0.45)",
-    letterSpacing: "0.2em",
-    fontWeight: 800
-  },
-
-  queueRow: {
-    background: "rgba(255,255,255,0.02)"
-  },
-
-  queueTd: {
-    padding: "18px 16px",
-    fontSize: "12px",
-    fontWeight: 700
-  },
-
-  queueTickerTd: {
-    padding: "18px 16px",
-    fontSize: "12px",
-    fontWeight: 800,
-    color: "#4edea3",
-    textTransform: "uppercase",
-    letterSpacing: "0.08em"
-  },
-
-  queueValueTd: {
-    padding: "18px 16px",
-    fontSize: "12px",
-    fontWeight: 800,
-    color: "#4edea3",
-    textAlign: "right",
-    fontFamily: "monospace"
-  },
-
-  stocksGrid: {
-    display: "grid",
-    gap: "18px"
-  },
-
-  stockCard: {
-    background: "rgba(255,255,255,0.022)",
-    padding: "22px",
-    borderRadius: "18px",
-    border: "1px solid rgba(255,255,255,0.05)",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    minHeight: "190px"
-  },
-
-  stockCardTop: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    gap: "16px",
-    marginBottom: "32px"
-  },
-
-  stockName: {
-    margin: 0,
-    fontSize: "18px",
-    fontWeight: 900,
-    letterSpacing: "-0.02em"
-  },
-
-  stockPriceBlock: {
-    textAlign: "right"
-  },
-
-  stockPriceLabel: {
-    fontSize: "9px",
-    textTransform: "uppercase",
-    color: "rgba(138, 147, 140, 0.45)",
-    fontWeight: 800,
-    letterSpacing: "0.15em",
-    marginBottom: "4px"
-  },
-
-  stockPrice: {
-    margin: 0,
-    fontSize: "18px",
-    fontFamily: "monospace",
-    color: "#4edea3"
-  },
-
-  stockCardActions: {
-    display: "flex",
-    gap: "10px",
-    alignItems: "center"
-  },
-
-  stockInput: {
-    width: "100%",
-    background: "rgba(0,0,0,0.44)",
-    border: "1px solid rgba(255,255,255,0.05)",
-    borderRadius: "12px",
-    color: "#e5e2e1",
-    padding: "12px 14px",
-    fontSize: "12px",
-    fontFamily: "monospace",
-    outline: "none"
-  },
-
-  deleteIconBtn: {
-    color: "rgba(255, 107, 107, 0.74)",
-    background: "rgba(255, 107, 107, 0.04)",
-    border: "1px solid rgba(255, 107, 107, 0.10)",
-    padding: "12px 12px",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontSize: "11px",
-    fontWeight: 700
-  },
-
-  emptyText: {
-    margin: 0,
-    color: "#8a938c",
-    fontSize: "14px"
-  },
-
-  footer: {
-    paddingBottom: "64px",
-    textAlign: "center",
-    opacity: 0.34,
-    position: "relative",
-    zIndex: 2
-  },
-
-  footerText: {
-    fontSize: "9px",
-    textTransform: "uppercase",
-    letterSpacing: "0.5em",
-    color: "#8a938c",
-    fontWeight: 600
-  },
-
-  bottomEdge: {
-    position: "fixed",
-    bottom: 0,
-    left: 0,
-    width: "100%",
-    height: "2px",
-    background:
-      "linear-gradient(90deg, transparent 0%, rgba(78, 222, 163, 0.2) 50%, transparent 100%)"
-  },
-
-  logoutBtn: {
-    padding: "16px 24px",
-    background: "rgba(239, 68, 68, 0.08)",
-    border: "1px solid rgba(239, 68, 68, 0.2)",
-    borderRadius: "14px",
-    color: "#ff6b6b",
-    fontSize: "11px",
-    fontWeight: 800,
-    letterSpacing: "0.15em",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    textTransform: "uppercase",
-    marginLeft: "20px"
-  },
-
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-    backdropFilter: "blur(12px)",
-    WebkitBackdropFilter: "blur(12px)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 99999
-  },
-
-  modalContent: {
-    background: "linear-gradient(180deg, #121212 0%, #0a0a0c 100%)",
-    border: "1px solid rgba(78, 222, 163, 0.2)",
-    borderRadius: "24px",
-    padding: "32px",
-    width: "400px",
-    maxWidth: "90%",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.8)",
-    textAlign: "center"
-  },
-
-  modalHeader: {
-    marginBottom: "20px"
-  },
-
-  modalTitle: {
-    margin: 0,
-    color: "#4edea3",
-    fontSize: "18px",
-    fontWeight: 900,
-    letterSpacing: "0.15em",
-    textTransform: "uppercase"
-  },
-
-  modalBody: {
-    marginBottom: "32px"
-  },
-
-  modalMessage: {
-    color: "#e2e8f0",
-    fontSize: "14px",
-    lineHeight: "1.6",
-    whiteSpace: "pre-wrap"
-  },
-
-  modalActions: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "16px"
-  },
-
-  modalCancelBtn: {
-    padding: "12px 24px",
-    background: "transparent",
-    border: "1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: "12px",
-    color: "#8a938c",
-    fontSize: "12px",
-    fontWeight: 800,
-    letterSpacing: "0.1em",
-    cursor: "pointer",
-    transition: "all 0.2s ease"
-  },
-
-  modalConfirmBtn: {
-    padding: "12px 24px",
-    background: "linear-gradient(135deg, rgba(220, 38, 38, 0.15), rgba(185, 28, 28, 0.25))",
-    border: "1px solid rgba(239, 68, 68, 0.35)",
-    borderRadius: "12px",
-    color: "#ff6b6b",
-    fontSize: "12px",
-    fontWeight: 800,
-    letterSpacing: "0.1em",
-    cursor: "pointer",
-    boxShadow: "0 4px 20px rgba(239, 68, 68, 0.15)"
-  }
-};
 
 export default AdminDashboard;

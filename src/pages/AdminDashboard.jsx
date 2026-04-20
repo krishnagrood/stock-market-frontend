@@ -465,11 +465,17 @@ function AdminDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Buyer Username</label>
-                    <input className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Buyer" value={orderForm.buyerUsername} onChange={e => setOrderForm({...orderForm, buyerUsername: e.target.value})} />
+                    <select className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" value={orderForm.buyerUsername} onChange={e => setOrderForm({...orderForm, buyerUsername: e.target.value, buyerTeam: e.target.value})}>
+                      <option value="">Select Buyer</option>
+                      {users.map(u => <option key={u.id} value={u.username}>{u.username}</option>)}
+                    </select>
                   </div>
                   <div>
                     <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Seller Username</label>
-                    <input className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Seller" value={orderForm.sellerUsername} onChange={e => setOrderForm({...orderForm, sellerUsername: e.target.value})} />
+                    <select className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" value={orderForm.sellerUsername} onChange={e => setOrderForm({...orderForm, sellerUsername: e.target.value, sellerTeam: e.target.value})}>
+                      <option value="">Select Seller</option>
+                      {users.map(u => <option key={u.id} value={u.username}>{u.username}</option>)}
+                    </select>
                   </div>
                   <div>
                     <label className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Select Stock</label>

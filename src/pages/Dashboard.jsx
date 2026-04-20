@@ -108,22 +108,7 @@ export default function Dashboard() {
             <span className="material-symbols-outlined text-lg" data-icon="terminal">terminal</span>
             <span>Terminal</span>
           </a>
-          <a className="flex items-center gap-3 px-4 py-3 text-[#e2e3e0]/40 hover:bg-[#1d201f] hover:text-[#e2e3e0] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
-            <span className="material-symbols-outlined text-lg" data-icon="query_stats">query_stats</span>
-            <span>Analytics</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 text-[#e2e3e0]/40 hover:bg-[#1d201f] hover:text-[#e2e3e0] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
-            <span className="material-symbols-outlined text-lg" data-icon="precision_manufacturing">precision_manufacturing</span>
-            <span>Strategy</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 text-[#e2e3e0]/40 hover:bg-[#1d201f] hover:text-[#e2e3e0] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
-            <span className="material-symbols-outlined text-lg" data-icon="receipt_long">receipt_long</span>
-            <span>Ledger</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 text-[#e2e3e0]/40 hover:bg-[#1d201f] hover:text-[#e2e3e0] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
-            <span className="material-symbols-outlined text-lg" data-icon="support_agent">support_agent</span>
-            <span>Support</span>
-          </a>
+
         </nav>
         <div className="px-6 mt-auto">
           <button onClick={handleLogout} className="w-full py-3 bg-error/20 text-error font-bold rounded-lg scale-95 active:opacity-80 transition-all flex items-center justify-center gap-2 hover:bg-error/30">

@@ -447,7 +447,7 @@ function AdminDashboard() {
       {/* SideNavBar */}
       <aside className="flex flex-col fixed left-0 top-0 h-full py-8 bg-[#191c1b] docked left-0 h-screen w-64 border-r border-[#6bfb9a]/5 z-50 hidden lg:flex">
         <div className="px-6 mb-10">
-          <h1 className="text-[#4ade80] font-black italic text-2xl tracking-tighter">Kinetic Admin</h1>
+          <h1 className="text-[#4ade80] font-black italic text-xl tracking-tighter">180Degree Consulting MLNCE</h1>
           <p className="text-[#e2e3e0]/40 font-['Inter'] text-[10px] uppercase tracking-[0.2em] mt-1">Command Center</p>
         </div>
         <nav className="flex-1 px-3 space-y-1">

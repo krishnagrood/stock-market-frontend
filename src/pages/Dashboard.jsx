@@ -88,7 +88,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-primary animate-pulse font-headline tracking-widest uppercase">Initializing Kinetic Protocol...</div>
+        <div className="text-primary animate-pulse font-montserrat font-bold tracking-widest uppercase">Initializing 180DC Protocol...</div>
       </div>
     );
   }
@@ -99,9 +99,9 @@ export default function Dashboard() {
       
       {/* SideNavBar */}
       <aside className="flex flex-col fixed left-0 top-0 h-full py-8 bg-[#191c1b] docked left-0 h-screen w-64 border-r border-[#6bfb9a]/5 z-50 hidden lg:flex">
-        <div className="px-6 mb-10">
-          <h1 className="text-[#4ade80] font-black italic text-2xl tracking-tighter">Kinetic Vault</h1>
-          <p className="text-[#e2e3e0]/40 font-['Inter'] text-[10px] uppercase tracking-[0.2em] mt-1">Active Session</p>
+        <div className="px-6 mb-10 flex flex-col items-center">
+          <img src="https://matyas-mattanelli.github.io/portfolio/assets/img/projects/180-degrees/180dc-logo.png" alt="180DC Logo" className="w-16 h-16 object-contain mb-3" />
+          <h1 className="text-[#6CB33E] font-montserrat font-extrabold text-[10px] text-center leading-tight tracking-widest uppercase">180 Degree Consulting MLNCE</h1>
         </div>
         <nav className="flex-1 px-3 space-y-1">
           <a className="flex items-center gap-3 px-4 py-3 bg-[#6bfb9a]/10 text-[#6bfb9a] border-r-4 border-[#6bfb9a] transition-all duration-150 ease-in-out font-['Inter'] text-sm uppercase tracking-widest" href="#">
@@ -146,12 +146,14 @@ export default function Dashboard() {
         {/* TopNavBar */}
         <header className="flex justify-between items-center w-full px-6 h-16 bg-[#111413]/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-[#6bfb9a]/10 shadow-[0_4px_24px_rgba(0,0,0,0.5)] z-40">
           <div className="flex items-center gap-8">
-            <div className="text-xl font-bold tracking-tighter text-[#4ade80] font-['Space_Grotesk']">Market Odyssey</div>
+            <div className="flex items-center gap-3">
+              <img src="https://matyas-mattanelli.github.io/portfolio/assets/img/projects/180-degrees/180dc-logo.png" alt="180DC Logo" className="w-8 h-8 object-contain" />
+              <div className="text-sm font-montserrat font-bold tracking-tight text-[#6CB33E]">180DC MLNCE</div>
+            </div>
             <div className="hidden md:flex items-center gap-6">
-              <a className="text-[#e2e3e0]/60 hover:text-[#e2e3e0] font-['Space_Grotesk'] tracking-tight transition-colors" href="#">Markets</a>
-              <a className="text-[#6bfb9a] border-b-2 border-[#6bfb9a] pb-1 font-['Space_Grotesk'] tracking-tight" href="#">Portfolio</a>
-              <a className="text-[#e2e3e0]/60 hover:text-[#e2e3e0] font-['Space_Grotesk'] tracking-tight transition-colors" href="#">Orders</a>
-              <a className="text-[#e2e3e0]/60 hover:text-[#e2e3e0] font-['Space_Grotesk'] tracking-tight transition-colors" href="#">Vault</a>
+              <a className="text-[#e2e3e0]/60 hover:text-[#6CB33E] font-montserrat text-[10px] uppercase tracking-widest transition-colors" href="#">Markets</a>
+              <a className="text-[#6CB33E] border-b-2 border-[#6CB33E] pb-1 font-montserrat text-[10px] uppercase tracking-widest" href="#">Portfolio</a>
+              <a className="text-[#e2e3e0]/60 hover:text-[#6CB33E] font-montserrat text-[10px] uppercase tracking-widest transition-colors" href="#">Orders</a>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -353,7 +355,7 @@ export default function Dashboard() {
                 <div className="mt-8 p-4 bg-primary/10 rounded-lg border border-primary/20">
                   <h4 className="text-[10px] font-bold tracking-widest text-primary uppercase mb-2">Strategy Alert</h4>
                   <p className="text-xs text-on-surface leading-relaxed">
-                    Market Odyssey Automated Signals are running. Ensure optimal portfolio balancing based on the latest market prints.
+                    180DC MLNCE Automated Signals are running. Ensure optimal portfolio balancing based on the latest market prints.
                   </p>
                 </div>
               </div>

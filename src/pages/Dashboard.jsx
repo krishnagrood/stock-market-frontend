@@ -44,8 +44,13 @@ export default function Dashboard() {
     navigate("/");
   };
 
+  // Real demat-style calculations
   const portfolioValue = useMemo(() => {
     return holdings.reduce((sum, item) => sum + (item.totalValue || 0), 0);
+  }, [holdings]);
+
+  const totalInvested = useMemo(() => {
+    return holdings.reduce((sum, item) => sum + (item.totalInvestment || 0), 0);
   }, [holdings]);
 
   const totalHoldings = holdings.length;
@@ -54,13 +59,14 @@ export default function Dashboard() {
     return holdings.reduce((sum, item) => sum + (item.quantity || 0), 0);
   }, [holdings]);
 
+  // P&L = Current Market Value - Total Investment (like a real demat)
   const totalPnL = useMemo(() => {
-    return holdings.reduce((sum, item) => {
-      const currentVal = (item.currentPrice || 0) * (item.quantity || 0);
-      const investedVal = item.totalInvestment || 0;
-      return sum + (currentVal - investedVal);
-    }, 0);
+    return holdings.reduce((sum, item) => sum + (item.pnl || 0), 0);
   }, [holdings]);
+
+  const totalPnLPercent = useMemo(() => {
+    return totalInvested > 0 ? ((totalPnL / totalInvested) * 100) : 0;
+  }, [totalPnL, totalInvested]);
 
   const buyOrders = useMemo(() => {
     return userOrders.filter(o => o.buyerUserId === Number(userId));
@@ -88,7 +94,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-primary animate-pulse font-headline tracking-widest uppercase">Initializing Kinetic Protocol...</div>
+        <div className="text-primary animate-pulse font-headline tracking-widest uppercase">Loading Dashboard...</div>
       </div>
     );
   }
@@ -164,16 +170,14 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
             <div className="bg-surface-container-low p-5 rounded-lg border-l-2 border-primary/40 relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full -mr-10 -mt-10"></div>
-              <p className="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold mb-2">Total Portfolio Value</p>
+              <p className="text-on-surface-variant text-[10px] uppercase tracking-widest font-bold mb-2">Current Value</p>
               <div className="flex items-baseline gap-2">
                 <h2 className="text-3xl font-headline font-bold text-on-surface">{formatCurrency(portfolioValue)}</h2>
                 <span className={`text-xs font-mono ${totalPnL >= 0 ? 'text-primary' : 'text-error'}`}>
-                  {totalPnL >= 0 ? '+' : ''}{totalPnL ? ((totalPnL / (portfolioValue - totalPnL)) * 100).toFixed(2) : '0.00'}%
+                  {totalPnL >= 0 ? '+' : ''}{totalPnLPercent.toFixed(2)}%
                 </span>
               </div>
-              <div className="mt-4 h-1 w-full bg-surface-container rounded-full overflow-hidden">
-                <div className="h-full bg-primary shadow-[0_0_8px_#6bfb9a]" style={{ width: '75%' }}></div>
-              </div>
+              <p className="text-on-surface-variant text-[10px] mt-1">Invested: {formatCurrency(totalInvested)}</p>
             </div>
             
             <div className="bg-surface-container-low p-5 rounded-lg border-l-2 border-outline-variant">
@@ -219,31 +223,31 @@ export default function Dashboard() {
                     <thead>
                       <tr className="text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container/50">
                         <th className="px-6 py-3 font-bold">Symbol</th>
-                        <th className="px-6 py-3 font-bold">Quantity</th>
-                        <th className="px-6 py-3 font-bold">Avg Buy</th>
-                        <th className="px-6 py-3 font-bold">Market Price</th>
+                        <th className="px-6 py-3 font-bold">Qty</th>
+                        <th className="px-6 py-3 font-bold">Avg Cost</th>
+                        <th className="px-6 py-3 font-bold">LTP</th>
+                        <th className="px-6 py-3 font-bold">Invested</th>
+                        <th className="px-6 py-3 font-bold">Current</th>
                         <th className="px-6 py-3 font-bold text-right">P&L</th>
                       </tr>
                     </thead>
                     <tbody className="text-sm font-mono divide-y divide-outline-variant/5">
-                      {holdings.length > 0 ? holdings.map((holding, index) => {
-                        const avgPrice = holding.totalInvestment / holding.quantity;
-                        const currentVal = holding.currentPrice * holding.quantity;
-                        const pnl = currentVal - holding.totalInvestment;
-                        return (
-                          <tr key={holding.id || index} className="hover:bg-surface-container-high/40 transition-colors">
-                            <td className="px-6 py-4 text-on-surface font-bold">{holding.stockName}</td>
-                            <td className="px-6 py-4 text-on-surface-variant">{holding.quantity}</td>
-                            <td className="px-6 py-4 text-on-surface-variant">{formatCurrency(avgPrice)}</td>
-                            <td className="px-6 py-4 text-on-surface">{formatCurrency(holding.currentPrice)}</td>
-                            <td className={`px-6 py-4 text-right ${pnl >= 0 ? 'text-primary' : 'text-error'}`}>
-                              {pnl >= 0 ? '+' : ''}{formatCurrency(pnl)}
-                            </td>
-                          </tr>
-                        )
-                      }) : (
+                      {holdings.length > 0 ? holdings.map((holding, index) => (
+                        <tr key={holding.holdingId || index} className="hover:bg-surface-container-high/40 transition-colors">
+                          <td className="px-6 py-4 text-on-surface font-bold">{holding.stockName}</td>
+                          <td className="px-6 py-4 text-on-surface-variant">{holding.quantity}</td>
+                          <td className="px-6 py-4 text-on-surface-variant">{formatCurrency(holding.avgBuyPrice)}</td>
+                          <td className="px-6 py-4 text-on-surface">{formatCurrency(holding.currentPrice)}</td>
+                          <td className="px-6 py-4 text-on-surface-variant">{formatCurrency(holding.totalInvestment)}</td>
+                          <td className="px-6 py-4 text-on-surface">{formatCurrency(holding.totalValue)}</td>
+                          <td className={`px-6 py-4 text-right ${holding.pnl >= 0 ? 'text-primary' : 'text-error'}`}>
+                            <div>{holding.pnl >= 0 ? '+' : ''}{formatCurrency(holding.pnl)}</div>
+                            <div className="text-[9px]">({holding.pnlPercent >= 0 ? '+' : ''}{holding.pnlPercent?.toFixed(2)}%)</div>
+                          </td>
+                        </tr>
+                      )) : (
                         <tr>
-                          <td colSpan="5" className="px-6 py-8 text-center text-on-surface-variant text-xs uppercase tracking-widest">NO HOLDINGS AVAILABLE</td>
+                          <td colSpan="7" className="px-6 py-8 text-center text-on-surface-variant text-xs uppercase tracking-widest">NO HOLDINGS AVAILABLE</td>
                         </tr>
                       )}
                     </tbody>

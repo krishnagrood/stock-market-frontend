@@ -303,12 +303,14 @@ export default function Dashboard() {
                     <h3 className="font-headline font-bold uppercase tracking-wider text-xs">Buy Orders</h3>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs font-mono min-w-[300px]">
+                    <table className="w-full text-xs font-mono min-w-[400px]">
                       <thead className="text-on-surface-variant border-b border-outline-variant/5">
                         <tr>
                           <th className="p-3 text-left">Asset</th>
+                          <th className="p-3 text-left">Seller</th>
                           <th className="p-3 text-left">Price</th>
-                          <th className="p-3 text-left">Size</th>
+                          <th className="p-3 text-left">Qty</th>
+                          <th className="p-3 text-left">Value</th>
                           <th className="p-3 text-right">Status</th>
                         </tr>
                       </thead>
@@ -316,12 +318,14 @@ export default function Dashboard() {
                         {buyOrders.length > 0 ? buyOrders.map(order => (
                           <tr key={order.id}>
                             <td className="p-3 text-on-surface font-bold">{order.stockName}</td>
+                            <td className="p-3 text-error">{order.sellerUsername}</td>
                             <td className="p-3 text-primary">{formatCurrency(order.price)}</td>
                             <td className="p-3 text-on-surface-variant">{order.quantity}</td>
+                            <td className="p-3 text-on-surface-variant">{formatCurrency(order.orderValue)}</td>
                             <td className="p-3 text-right"><span className={`px-2 py-0.5 rounded-full text-[8px] ${order.status === 'PENDING' ? 'bg-primary/10 text-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}>{order.status}</span></td>
                           </tr>
                         )) : (
-                          <tr><td colSpan="4" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No pending buy orders</td></tr>
+                          <tr><td colSpan="6" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No pending buy orders</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -334,12 +338,14 @@ export default function Dashboard() {
                     <h3 className="font-headline font-bold uppercase tracking-wider text-xs">Sell Orders</h3>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-xs font-mono min-w-[300px]">
+                    <table className="w-full text-xs font-mono min-w-[400px]">
                       <thead className="text-on-surface-variant border-b border-outline-variant/5">
                         <tr>
                           <th className="p-3 text-left">Asset</th>
+                          <th className="p-3 text-left">Buyer</th>
                           <th className="p-3 text-left">Price</th>
-                          <th className="p-3 text-left">Size</th>
+                          <th className="p-3 text-left">Qty</th>
+                          <th className="p-3 text-left">Value</th>
                           <th className="p-3 text-right">Status</th>
                         </tr>
                       </thead>
@@ -347,12 +353,14 @@ export default function Dashboard() {
                         {sellOrders.length > 0 ? sellOrders.map(order => (
                           <tr key={order.id}>
                             <td className="p-3 text-on-surface font-bold">{order.stockName}</td>
+                            <td className="p-3 text-primary">{order.buyerUsername}</td>
                             <td className="p-3 text-error">{formatCurrency(order.price)}</td>
                             <td className="p-3 text-on-surface-variant">{order.quantity}</td>
+                            <td className="p-3 text-on-surface-variant">{formatCurrency(order.orderValue)}</td>
                             <td className="p-3 text-right"><span className={`px-2 py-0.5 rounded-full text-[8px] ${order.status === 'PENDING' ? 'bg-error/10 text-error' : 'bg-surface-container-highest text-on-surface-variant'}`}>{order.status}</span></td>
                           </tr>
                         )) : (
-                          <tr><td colSpan="4" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No pending sell orders</td></tr>
+                          <tr><td colSpan="6" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No pending sell orders</td></tr>
                         )}
                       </tbody>
                     </table>

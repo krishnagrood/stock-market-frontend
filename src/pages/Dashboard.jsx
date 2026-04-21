@@ -243,6 +243,50 @@ export default function Dashboard() {
                 </div>
               </section>
 
+              {/* Market Overview */}
+              <section className="bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/10">
+                <div className="px-6 py-4 border-b border-outline-variant/10 flex justify-between items-center bg-surface-container-highest/20">
+                  <h3 className="font-headline font-bold uppercase tracking-wider text-sm flex items-center gap-2">
+                    <span className="material-symbols-outlined text-primary" data-icon="inventory_2">inventory_2</span>
+                    Market Inventory
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse min-w-[600px]">
+                    <thead>
+                      <tr className="text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container/50">
+                        <th className="px-6 py-3 font-bold">Symbol</th>
+                        <th className="px-6 py-3 font-bold">Market Price</th>
+                        <th className="px-6 py-3 font-bold text-center">Min Bid (80%)</th>
+                        <th className="px-6 py-3 font-bold text-center">Max Bid (120%)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-sm font-mono divide-y divide-outline-variant/5">
+                      {stocks.length > 0 ? stocks.map((s) => (
+                        <tr key={s.id} className="hover:bg-surface-container-high/40 transition-colors">
+                          <td className="px-6 py-4 text-on-surface font-bold">{s.name}</td>
+                          <td className="px-6 py-4 text-primary font-bold">{formatCurrency(s.price)}</td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="px-3 py-1 bg-error/10 text-error rounded border border-error/20">
+                              {formatCurrency(getMinBid(s.price))}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="px-3 py-1 bg-primary/10 text-primary rounded border border-primary/20">
+                              {formatCurrency(getMaxBid(s.price))}
+                            </span>
+                          </td>
+                        </tr>
+                      )) : (
+                        <tr>
+                          <td colSpan="4" className="px-6 py-8 text-center text-on-surface-variant text-xs uppercase tracking-widest">MARKET CLOSED</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
               {/* Dual View Order Book */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <section className="bg-surface-container-low rounded-lg overflow-hidden border border-outline-variant/10">

@@ -104,6 +104,9 @@ function AdminDashboard() {
     }
   };
 
+  const getMinBid = (price) => Math.max((price * 0.80), 0.01).toFixed(2);
+  const getMaxBid = (price) => (price * 1.20).toFixed(2);
+
   useEffect(() => {
     fetchStocks();
     fetchUsers();
@@ -598,6 +601,8 @@ function AdminDashboard() {
                       <tr className="text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container/50">
                         <th className="px-6 py-3 font-bold">Ticker</th>
                         <th className="px-6 py-3 font-bold text-right">Reference</th>
+                        <th className="px-6 py-3 font-bold text-center">Min (80%)</th>
+                        <th className="px-6 py-3 font-bold text-center">Max (120%)</th>
                         <th className="px-6 py-3 font-bold text-right">Target</th>
                       </tr>
                     </thead>
@@ -606,10 +611,12 @@ function AdminDashboard() {
                         <tr key={item.id} className="hover:bg-surface-container-high/40 transition-colors">
                           <td className="px-6 py-3 text-on-surface font-bold">{item.stockName}</td>
                           <td className="px-6 py-3 text-on-surface-variant text-right">₹{item.oldPrice}</td>
+                          <td className="px-6 py-3 text-center text-error font-bold">₹{getMinBid(item.oldPrice)}</td>
+                          <td className="px-6 py-3 text-center text-primary font-bold">₹{getMaxBid(item.oldPrice)}</td>
                           <td className={`px-6 py-3 text-right font-bold ${item.newPrice > item.oldPrice ? 'text-primary' : 'text-error'}`}>₹{item.newPrice}</td>
                         </tr>
                       ))}
-                      {previewPrices.length === 0 && <tr><td colSpan="3" className="px-6 py-6 text-center text-on-surface-variant text-xs">No preview generated</td></tr>}
+                      {previewPrices.length === 0 && <tr><td colSpan="5" className="px-6 py-6 text-center text-on-surface-variant text-xs">No preview generated</td></tr>}
                     </tbody>
                   </table>
                 </div>
@@ -678,9 +685,13 @@ function AdminDashboard() {
                 <div className="space-y-2 max-h-64 overflow-y-auto pr-2 no-scrollbar">
                   {stocks.map(s => (
                     <div key={s.id} className="bg-surface-container p-3 rounded flex justify-between items-center group">
-                      <div>
+                      <div className="flex-1">
                         <div className="text-sm font-bold font-headline">{s.name}</div>
-                        <div className="text-[10px] text-primary font-mono">₹{s.price}</div>
+                        <div className="flex gap-4 mt-1">
+                          <div className="text-[10px] text-primary font-mono font-bold">NOW: ₹{s.price}</div>
+                          <div className="text-[10px] text-error font-mono">MIN: ₹{getMinBid(s.price)}</div>
+                          <div className="text-[10px] text-primary font-mono opacity-80">MAX: ₹{getMaxBid(s.price)}</div>
+                        </div>
                       </div>
                       <button onClick={() => deleteStock(s.id)} className="text-error/50 hover:text-error transition-colors p-1"><span className="material-symbols-outlined text-sm">delete</span></button>
                     </div>

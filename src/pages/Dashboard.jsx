@@ -326,10 +326,10 @@ export default function Dashboard() {
                             <td className="p-3 text-primary">{formatCurrency(order.price)}</td>
                             <td className="p-3 text-on-surface-variant">{order.quantity}</td>
                             <td className="p-3 text-on-surface-variant">{formatCurrency(order.orderValue)}</td>
-                            <td className="p-3 text-right"><span className={`px-2 py-0.5 rounded-full text-[8px] ${order.status === 'PENDING' ? 'bg-primary/10 text-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}>{order.status}</span></td>
+                            <td className="p-3 text-right"><span className={`px-2 py-0.5 rounded-full text-[8px] font-bold ${order.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400' : 'bg-primary/10 text-primary'}`}>{order.status}</span></td>
                           </tr>
                         )) : (
-                          <tr><td colSpan="6" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No pending buy orders</td></tr>
+                          <tr><td colSpan="6" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No buy orders</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -361,10 +361,10 @@ export default function Dashboard() {
                             <td className="p-3 text-error">{formatCurrency(order.price)}</td>
                             <td className="p-3 text-on-surface-variant">{order.quantity}</td>
                             <td className="p-3 text-on-surface-variant">{formatCurrency(order.orderValue)}</td>
-                            <td className="p-3 text-right"><span className={`px-2 py-0.5 rounded-full text-[8px] ${order.status === 'PENDING' ? 'bg-error/10 text-error' : 'bg-surface-container-highest text-on-surface-variant'}`}>{order.status}</span></td>
+                            <td className="p-3 text-right"><span className={`px-2 py-0.5 rounded-full text-[8px] font-bold ${order.status === 'PENDING' ? 'bg-yellow-500/10 text-yellow-400' : 'bg-primary/10 text-primary'}`}>{order.status}</span></td>
                           </tr>
                         )) : (
-                          <tr><td colSpan="6" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No pending sell orders</td></tr>
+                          <tr><td colSpan="6" className="p-4 text-center text-on-surface-variant/50 text-[10px] uppercase">No sell orders</td></tr>
                         )}
                       </tbody>
                     </table>

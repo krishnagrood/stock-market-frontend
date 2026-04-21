@@ -140,6 +140,14 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-4">
+            <button 
+              onClick={fetchDashboardData} 
+              className="flex items-center gap-2 px-3 py-1 bg-primary/10 hover:bg-primary/20 text-primary rounded-full border border-primary/20 transition-all active:scale-95 group"
+              title="Refresh Dashboard Data"
+            >
+              <span className={`material-symbols-outlined text-sm ${loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} data-icon="refresh">refresh</span>
+              <span className="text-[10px] font-bold tracking-widest uppercase">Refresh</span>
+            </button>
             <div className="flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_#6bfb9a]"></div>
               <span className="text-[10px] font-bold tracking-widest text-primary font-label">LIVE FEED</span>

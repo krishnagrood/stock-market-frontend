@@ -46,6 +46,11 @@ function AdminDashboard() {
   const [approvingPrices, setApprovingPrices] = useState(false);
   const [allocating, setAllocating] = useState(false);
 
+  const [expandedUserId, setExpandedUserId] = useState(null);
+  const toggleUserExpanded = (id) => {
+    setExpandedUserId(expandedUserId === id ? null : id);
+  };
+
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://stock-market-backend-production-bf5f.up.railway.app/api";
 
   
@@ -638,17 +643,69 @@ function AdminDashboard() {
                 </div>
                 
                 <h4 className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Active Users</h4>
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-2 no-scrollbar">
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 no-scrollbar">
                   {users.map(u => (
-                    <div key={u.id} className="bg-surface-container p-3 rounded flex justify-between items-center group">
-                      <div>
-                        <div className="text-sm font-bold">{u.username}</div>
-                        <div className="text-[10px] text-on-surface-variant font-mono">₹{u.balance}</div>
+                    <div key={u.id} className="bg-surface-container border border-outline-variant/10 rounded overflow-hidden">
+                      {/* Main Row */}
+                      <div className="p-4 flex items-center justify-between cursor-pointer hover:bg-surface-container-high transition-colors" onClick={() => toggleUserExpanded(u.id)}>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-on-surface">{u.username}</span>
+                            <span className={`text-[8px] px-1.5 py-0.5 rounded uppercase font-bold tracking-widest ${u.role === 'ADMIN' ? 'bg-primary/20 text-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}>{u.role}</span>
+                          </div>
+                          <div className="flex items-center flex-wrap gap-4 mt-2 text-[10px] font-mono">
+                            <div className="text-on-surface-variant">Cash: <span className="text-on-surface font-bold">₹{parseFloat(u.balance || 0).toLocaleString()}</span></div>
+                            <div className="text-on-surface-variant">Portfolio: <span className="text-primary font-bold">₹{parseFloat(u.portfolioValue || 0).toLocaleString()}</span></div>
+                            <div className="text-on-surface-variant">
+                              PnL: <span className={`font-bold ${parseFloat(u.pnl || 0) >= 0 ? 'text-primary' : 'text-error'}`}>
+                                {parseFloat(u.pnl || 0) >= 0 ? '+' : ''}₹{parseFloat(u.pnl || 0).toLocaleString()} ({parseFloat(u.pnlPercent || 0).toFixed(2)}%)
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button onClick={(e) => { e.stopPropagation(); deleteUser(u.id); }} className="text-error/50 hover:text-error transition-colors p-2 rounded-full hover:bg-error/10"><span className="material-symbols-outlined text-sm">delete</span></button>
+                          <span className={`material-symbols-outlined text-on-surface-variant transition-transform ${expandedUserId === u.id ? 'rotate-180' : ''}`}>expand_more</span>
+                        </div>
                       </div>
-                      <button onClick={() => deleteUser(u.id)} className="text-error/50 hover:text-error transition-colors p-1"><span className="material-symbols-outlined text-sm">delete</span></button>
+
+                      {/* Expanded Details */}
+                      {expandedUserId === u.id && (
+                        <div className="p-4 bg-surface-container-low border-t border-outline-variant/10">
+                          <div className="flex justify-between items-center mb-3">
+                            <h5 className="text-[10px] uppercase font-bold tracking-widest text-on-surface-variant">Holdings Breakdown</h5>
+                            <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">Total Orders: {u.totalOrders || 0}</span>
+                          </div>
+                          
+                          {u.holdings && u.holdings.length > 0 ? (
+                            <table className="w-full text-[10px] font-mono text-left">
+                              <thead className="text-on-surface-variant border-b border-outline-variant/10">
+                                <tr>
+                                  <th className="py-1.5 font-normal">Asset</th>
+                                  <th className="py-1.5 font-normal text-right">Qty</th>
+                                  <th className="py-1.5 font-normal text-right">Value</th>
+                                  <th className="py-1.5 font-normal text-right">Avg Cost</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-outline-variant/5">
+                                {u.holdings.map((h, i) => (
+                                  <tr key={i}>
+                                    <td className="py-2 text-on-surface font-bold">{h.stockName}</td>
+                                    <td className="py-2 text-on-surface-variant text-right">{h.quantity}</td>
+                                    <td className="py-2 text-primary text-right font-bold">₹{parseFloat(h.value || 0).toLocaleString()}</td>
+                                    <td className="py-2 text-on-surface-variant text-right">₹{(parseFloat(h.investment || 0) / h.quantity).toFixed(2)}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          ) : (
+                            <div className="text-center py-4 text-[10px] text-on-surface-variant uppercase">No current holdings</div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
-                  {users.length === 0 && <div className="text-xs text-on-surface-variant text-center py-2">No users registered</div>}
+                  {users.length === 0 && <div className="text-xs text-on-surface-variant text-center py-4">No users registered</div>}
                 </div>
               </section>
 

@@ -51,6 +51,9 @@ function AdminDashboard() {
     setExpandedUserId(expandedUserId === id ? null : id);
   };
 
+  const [manualPriceForm, setManualPriceForm] = useState({ stockId: "", price: "" });
+  const [updatingManualPrice, setUpdatingManualPrice] = useState(false);
+
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://stock-market-backend-production-bf5f.up.railway.app/api";
 
   
@@ -276,6 +279,30 @@ function AdminDashboard() {
 
   const deleteStock = (stockId) => {
     confirmAction("DELETE_STOCK", stockId, "Delete this stock?");
+  };
+
+  const handleManualPriceUpdate = async () => {
+    const { stockId, price } = manualPriceForm;
+    if (!stockId || !price || Number(price) <= 0) {
+      alert("Please select a stock and enter a valid positive price.");
+      return;
+    }
+
+    try {
+      setUpdatingManualPrice(true);
+      const res = await axios.put(`${API_BASE}/admin/updatePrice?stockId=${stockId}&price=${price}`);
+      if (res.data.success) {
+        setManualPriceForm({ stockId: "", price: "" });
+        fetchStocks();
+      } else {
+        alert(res.data.message || "Failed to update price.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error updating price.");
+    } finally {
+      setUpdatingManualPrice(false);
+    }
   };
 
 
@@ -716,6 +743,19 @@ function AdminDashboard() {
                   <input className="w-1/3 bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none uppercase font-mono" placeholder="Symbol" value={newStock.name} onChange={e => setNewStock({...newStock, name: e.target.value.toUpperCase()})} />
                   <input type="number" className="w-1/3 bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none font-mono" placeholder="Price" value={newStock.price} onChange={e => setNewStock({...newStock, price: e.target.value})} />
                   <button onClick={addStock} className="w-1/3 py-2 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary text-[10px] font-bold uppercase tracking-widest rounded transition-all">Initialize</button>
+                </div>
+              </section>
+
+              {/* Manual Price Override */}
+              <section className="bg-surface-container-low rounded-lg p-6 border border-outline-variant/10 border-l-4 border-l-yellow-500/50">
+                <h3 className="font-headline font-bold uppercase tracking-wider text-sm mb-4 text-yellow-400">Manual Price Override</h3>
+                <div className="space-y-4">
+                  <select className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" value={manualPriceForm.stockId} onChange={e => setManualPriceForm({...manualPriceForm, stockId: e.target.value})}>
+                    <option value="">Select Stock</option>
+                    {stocks.map(s => <option key={s.id} value={s.id}>{s.name} (₹{s.price})</option>)}
+                  </select>
+                  <input type="number" className="w-full bg-surface-container border border-outline-variant/20 rounded p-2 text-sm text-on-surface focus:border-primary/50 focus:outline-none" placeholder="Force New Price" value={manualPriceForm.price} onChange={e => setManualPriceForm({...manualPriceForm, price: e.target.value})} />
+                  <button onClick={handleManualPriceUpdate} disabled={updatingManualPrice} className="w-full py-2.5 bg-yellow-500/20 hover:bg-yellow-500/30 border border-yellow-500/30 text-yellow-400 text-[10px] font-bold uppercase tracking-widest rounded transition-all">{updatingManualPrice ? 'Overriding...' : 'Force Update Market Price'}</button>
                 </div>
               </section>
 
